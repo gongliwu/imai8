@@ -1,4 +1,4 @@
-<?php
+  <?php
 /**
  * tpshop
  * ============================================================================
@@ -347,51 +347,121 @@ function sendSms($scene, $sender, $params)
 //     */
 function realSendSMS($mobile, $smsSign, $smsParam , $templateCode)
 {
-
+    //dump($smsParam);die;
     //时区设置：亚洲/上海
     date_default_timezone_set('Asia/Shanghai');
-    //这个是你下面实例化的类
-    vendor('Alidayu.TopClient');
-    //这个是topClient 里面需要实例化一个类所以我们也要加载 不然会报错
-    vendor('Alidayu.ResultSet');
-    //这个是成功后返回的信息文件
-    vendor('Alidayu.RequestCheckUtil');
-    //这个是错误信息返回的一个php文件
-    vendor('Alidayu.TopLogger');
-    //这个也是你下面示例的类
-    vendor('Alidayu.AlibabaAliqinFcSmsNumSendRequest');
+    $smsParam = json_decode($smsParam);
+    $sendUrl = 'http://v.juhe.cn/sms/send'; //短信接口的URL
+  
+    $smsConf = array(
+        'key'   => '41dd8a81b00af6093b2e8de20831196c', //您申请的APPKEY
+        'mobile'    => $mobile, //接受短信的用户手机号码
+        'tpl_id'    => $templateCode, //您申请的短信模板ID，根据实际情况修改
+        'tpl_value' =>"#code#=$smsParam->code&#company#=$smsSign&#consignee#=$smsParam->consignee&#phone#=$mobile&#user_name#=$smsParam->user_name&#order_sn#=$smsParam->order_sn" //您设置的模板变量，根据实际情况修改
+    );
+     
+    $content = juhecurl($sendUrl,$smsConf,1); //请求发送短信
+     
+    if($content){
+        $result = json_decode($content,true);
+        $error_code = $result['error_code'];
+        if($error_code == 0){
+            //状态为0，说明短信发送成功
+            return array('status'=>1,'msg'=>'短信发送成功,短信ID：'.$result['result']['sid']);
+            //echo "短信发送成功,短信ID：".$result['result']['sid'];
+        }else{
+            //状态非0，说明失败
+            $msg = $result['reason'];
+            return array('status' => -1,'msg'=>"短信发送失败(".$error_code.")：".$msg);
+            //echo "短信发送失败(".$error_code.")：".$msg;
+        }
+    }else{
+        //返回内容异常，以下可根据业务逻辑自行修改
+        return array('status'=> -1,'msg'=> '参数错误');
+}
+ 
+    // //这个是你下面实例化的类
+    // vendor('Alidayu.TopClient');
+    // //这个是topClient 里面需要实例化一个类所以我们也要加载 不然会报错
+    // vendor('Alidayu.ResultSet');
+    // //这个是成功后返回的信息文件
+    // vendor('Alidayu.RequestCheckUtil');
+    // //这个是错误信息返回的一个php文件
+    // vendor('Alidayu.TopLogger');
+    // //这个也是你下面示例的类
+    // vendor('Alidayu.AlibabaAliqinFcSmsNumSendRequest');
 
-    $c = new \TopClient;
-    $config = tpCache('sms');
-    //App Key的值 这个在开发者控制台的应用管理点击你添加过的应用就有了
-    $c->appkey = $config['sms_appkey'];
-    //App Secret的值也是在哪里一起的 你点击查看就有了
-    $c->secretKey = $config['sms_secretKey'];
-    //这个是用户名记录那个用户操作
-    $req = new \AlibabaAliqinFcSmsNumSendRequest;
-    //代理人编号 可选
-    $req->setExtend("123456");
-    //短信类型 此处默认 不用修改
-    $req->setSmsType("normal");
-    //短信签名 必须
-    $req->setSmsFreeSignName($smsSign);
-    //短信模板 必须
-    $req->setSmsParam($smsParam);
-    //短信接收号码 支持单个或多个手机号码，传入号码为11位手机号码，不能加0或+86。群发短信需传入多个号码，以英文逗号分隔，
-    $req->setRecNum("$mobile");
-    //短信模板ID，传入的模板必须是在阿里大鱼“管理中心-短信模板管理”中的可用模板。
-    $req->setSmsTemplateCode($templateCode); // templateCode
+    // $c = new \TopClient;
+    // $config = tpCache('sms');
+    // //App Key的值 这个在开发者控制台的应用管理点击你添加过的应用就有了
+    // $c->appkey = $config['sms_appkey'];
+    // //App Secret的值也是在哪里一起的 你点击查看就有了
+    // $c->secretKey = $config['sms_secretKey'];
+    // //这个是用户名记录那个用户操作
+    // $req = new \AlibabaAliqinFcSmsNumSendRequest;
+    // //代理人编号 可选
+    // $req->setExtend("123456");
+    // //短信类型 此处默认 不用修改
+    // $req->setSmsType("normal");
+    // //短信签名 必须
+    // $req->setSmsFreeSignName($smsSign);
+    // //短信模板 必须
+    // $req->setSmsParam($smsParam);
+    // //短信接收号码 支持单个或多个手机号码，传入号码为11位手机号码，不能加0或+86。群发短信需传入多个号码，以英文逗号分隔，
+    // $req->setRecNum("$mobile");
+    // //短信模板ID，传入的模板必须是在阿里大鱼“管理中心-短信模板管理”中的可用模板。
+    // $req->setSmsTemplateCode($templateCode); // templateCode
 
-    $c->format = 'json';
+    // $c->format = 'json';
 
-    //发送短信
-    $resp = $c->execute($req);
-    //短信发送成功返回True，失败返回false
-    if ($resp && $resp->result) {
-        return array('status' => 1, 'msg' => $resp->sub_msg);
-    } else {
-        return array('status' => -1, 'msg' => $resp->msg . ' ,sub_msg :' . $resp->sub_msg . ' subcode:' . $resp->sub_code);
+    // //发送短信
+    // $resp = $c->execute($req);
+    // //短信发送成功返回True，失败返回false
+    // if ($resp && $resp->result) {
+    //     return array('status' => 1, 'msg' => $resp->sub_msg);
+    // } else {
+    //     return array('status' => -1, 'msg' => $resp->msg . ' ,sub_msg :' . $resp->sub_msg . ' subcode:' . $resp->sub_code);
+    // }
+}
+
+/**
+ * 请求接口返回内容
+ * @param  string $url [请求的URL地址]
+ * @param  string $params [请求的参数]
+ * @param  int $ipost [是否采用POST形式]
+ * @return  string
+ */
+function juhecurl($url,$params=false,$ispost=0){
+    $httpInfo = array();
+    $ch = curl_init();
+    curl_setopt( $ch, CURLOPT_HTTP_VERSION , CURL_HTTP_VERSION_1_1 );
+    curl_setopt( $ch, CURLOPT_USERAGENT , 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.172 Safari/537.22' );
+    curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT , 30 );
+    curl_setopt( $ch, CURLOPT_TIMEOUT , 30);
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER , true );
+    if( $ispost )
+    {
+        curl_setopt( $ch , CURLOPT_POST , true );
+        curl_setopt( $ch , CURLOPT_POSTFIELDS , $params );
+        curl_setopt( $ch , CURLOPT_URL , $url );
     }
+    else
+    {
+        if($params){
+            curl_setopt( $ch , CURLOPT_URL , $url.'?'.$params );
+        }else{
+            curl_setopt( $ch , CURLOPT_URL , $url);
+        }
+    }
+    $response = curl_exec( $ch );
+    if ($response === FALSE) {
+        //echo "cURL Error: " . curl_error($ch);
+        return false;
+    }
+    $httpCode = curl_getinfo( $ch , CURLINFO_HTTP_CODE );
+    $httpInfo = array_merge( $httpInfo , curl_getinfo( $ch ) );
+    curl_close( $ch );
+    return $response;
 }
 
 /**
@@ -604,26 +674,21 @@ function tpCache($config_key,$data = array()){
  * @param   float   distribut_money 分佣金额
  * @return  bool
  */
-function accountLog($user_id, $user_money = 0,$pay_points = 0, $desc = '',$distribut_money = 0,$isAdd = 1){
+function accountLog($user_id, $user_money = 0,$pay_points = 0, $desc = '',$distribut_money = 0){
     /* 插入帐户变动记录 */
     $account_log = array(
         'user_id'       => $user_id,
         'user_money'    => $user_money,
-        'pay_points'    => $isAdd ? $pay_points : -$pay_points,
+        'pay_points'    => $pay_points,
         'change_time'   => time(),
         'desc'   => $desc,
     );
     /* 更新用户信息 */
 //    $sql = "UPDATE __PREFIX__users SET user_money = user_money + $user_money," .
 //        " pay_points = pay_points + $pay_points, distribut_money = distribut_money + $distribut_money WHERE user_id = $user_id";
-  $exp_points = 'pay_points+';
-  if(!$isAdd){
-    $exp_points = 'pay_points-';
-  }
-
     $update_data = array(
         'user_money'        => ['exp','user_money+'.$user_money],
-        'pay_points'        => ['exp',$exp_points.$pay_points],
+        'pay_points'        => ['exp','pay_points+'.$pay_points],
         'distribut_money'   => ['exp','distribut_money+'.$distribut_money],
     );
 	if(($user_money+$pay_points+$distribut_money) == 0)
@@ -739,7 +804,7 @@ function orderStatusDesc($order_id = 0, $order = array())
         if($order['order_status'] == 2)
             return 'WAITCCOMMENT'; //'待评价',
     }
-
+    
     if($order['order_status'] == 3)
         return 'CANCEL'; //'已取消',
 
@@ -1385,7 +1450,7 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
       $total_amount = 0;
     }
 
-
+    
 
     $result = array(
         'total_amount' => $total_amount, // 商品总价
