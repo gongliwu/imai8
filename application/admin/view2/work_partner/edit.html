@@ -1,0 +1,67 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>编辑合作伙伴</h3>
+        <h5>合作伙伴编辑与管理</h5>
+      </div>
+    </div>
+  </div>
+    <!--表单数据-->
+    <form method="post" id="editForm" onSubmit="return checkName();">
+    <div class="ncap-form-default">
+      <dl class="row">
+        <dt class="tit">
+          <label for="name">公司名称</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" placeholder="名称" class="input-txt" name="name" value="{$partner.name}">
+        </dd>
+      </dl>
+	   <dl class="row">
+        <dt class="tit"><em>*</em>公司logo:</dt>
+        <dd class="opt">
+          <div class="input-file-show" id="divComUploadContainer">
+            <span class="type-file-box">
+            <input type="text" id="logo" name="logo" value="{$partner.logo}" class="type-file-text">
+            <input type="button" class="type-file-button" onClick="GetUploadify(1,'logo','workPartner','')" value="上传图片"/>
+            </span>
+          </div>
+          <div id="thumbnails" class="ncap-thumb-list">
+            <h5><i class="fa fa-exclamation-circle"></i> 请上传图片格式文件。</h5>
+            <ul>
+            </ul>
+          </div>
+          <span class="err" id="logo_err" style="color:#F00; display:none;">请上传公司logo</span>
+          <p class="notic"></p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label for="sort">排序</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" placeholder="排序" class="input-txt" name="sort" value="50">
+        </dd>
+      </dl>
+      <div class="bot"><a href="JavaScript:void(0);" onClick="$('#editForm').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+    </div>
+    <input type="hidden" name="id" value="{$partner.id}" />
+  </form>
+</div>
+<script>
+// 判断输入框是否为空
+function checkName(){
+  $logo = $("#logo").val();
+  if($.trim($logo) == '')
+  {
+    $("#logo_err").show();
+    return false;
+  }
+  return true;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop1.2" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>安全中心-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170830"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/login.css?v=20170830"/>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js" ></script>
+</head>
+<style media="screen">
+  .left_label{width: 60px}
+  .yonghu,.yanzheng{font-size: 14px;display: flex;}
+</style>
+<body>
+<header id="header" class='header'>
+    <div class="h-left"><a href="javascript:history.back(-1)"></a></div>
+	<div class="h-mid">找回密码</div>
+</header>
+<div id="tbh5v0">
+	<div class="find">
+	<section class="innercontent">
+	<form action="{:U('User/forget_pwd')}" method="post" id="fpForm" name="fpForm" class="c-form login-form">
+		<div class="yonghu">
+			<div class="left_label">账号：</div><div class="flex_1"><input type="text" id="username" name="username" placeholder="请输入手机号" value="" /></div>
+		</div>
+	    <div class="yanzheng" style=" margin-top:10px;">
+        <div class="left_label">验证码：</div>
+        <div class="flex_1">
+			     <div class="codeTxt">
+				         <input type="text" id="captcha" name="verify_code" placeholder="验证码" />
+			     </div>
+			     <div class="codePhoto">
+				         <img class="check-code-img" src="/index.php?m=Mobile&c=User&a=verify&type=user_reg" alt="验证码" id="verify_code_img" onClick="verify()" height="35"/>
+			     </div>
+           </div>
+		</div>
+    <div class="yanzheng"  style=" margin-top:0px;">
+      <div class="codeTxt">
+        <input type="text" id="mobile_code"  name="mobile_code" placeholder="手机验证码" />
+      </div>
+      <div class="codePhoto">
+        <input id="zphone" type="button" rel="mobile" value="获取手机验证码" onClick="sendcode(this)" class="zphone" style="color:#FFF;"/>
+      </div>
+    </div>
+		<div class="submit-btn">
+			<input type="button" id="btn_submit" class="btn_big1" onclick="submitverify()" value="下一步" />
+		</div>
+	</form>
+   </section>
+</div>
+</div>
+<script type="text/javascript">
+    //验证码切换
+    function verify(){
+        $('#verify_code_img').attr('src','/index.php?m=Mobile&c=User&a=verify&type=user_reg&r='+Math.random());
+    }
+    var flag = false;
+    function submitverify(){
+        var username = $('#username').val();
+        if(username == ''){
+            layer.msg('用户名不能为空',{time:2000});
+            return false;
+        }
+        if(!checkMobile(username) && !checkEmail(username)){
+            layer.msg('账号格式不匹配!',{time:2000});
+            return false;
+        }
+        if($('#captcha').val() == ''){
+            layer.msg('验证码不能为空',{time:2000});
+            return false;
+        }
+        if($('#mobile_code').val() == ''){
+            layer.msg('手机验证码不能为空',{time:2000});
+        }
+
+        $("#fpForm").submit();
+    }
+
+    function sendcode(o){
+      var username = $('#username').val();
+      var verify_code = $('#captcha').val();
+      if(username == ''){
+          layer.msg('用户名不能为空',{time:2000});
+          return false;
+      }
+      if(!checkMobile(username) && !checkEmail(username)){
+          layer.msg('账号格式不匹配!',{time:2000});
+          return false;
+      }
+      if( verify_code == ''){
+          layer.msg('验证码不能为空',{time:2000});
+          return false;
+      }
+      flag = true;
+    	if(flag){
+    		$.ajax({
+    			url:  '/index.php?m=Home&c=Api&a=forget_pwd&verify_code='+ verify_code +'&mobile=' + username,
+    			type:'post',
+    			dataType:'json',
+    			data:{type:$(o).attr('rel'),send:$.trim($('#username').val()) , scene:1},
+    			success:function(res){
+    				if(res.status==1){
+    					layer.msg(res.msg,{time:2000});
+    					countdown(o);
+    				}else{
+              verify();
+    					layer.msg(res.msg,{time:2000});
+    				}
+    			}
+    		})
+    	}
+    }
+    var wait = 60;
+    function countdown(obj, msg) {
+    	obj = $(obj);
+
+    	if (wait == 0) {
+    		obj.removeAttr("disabled");
+    		obj.val(msg);
+    		wait = 60;
+    	} else {
+    		if (msg == undefined || msg == null) {
+    			msg = obj.val();
+    		}
+    		obj.attr("disabled", "disabled");
+    		obj.val(wait + "秒后重新获取");
+    		wait--;
+    		setTimeout(function() {
+    			countdown(obj, msg)
+    		}, 1000)
+    	}
+    }
+</script>
+</body>
+</html>

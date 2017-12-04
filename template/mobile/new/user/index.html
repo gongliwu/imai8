@@ -1,0 +1,169 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPSHOP v1.1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="applicable-device" content="mobile">
+<title>设置-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="Keywords" content="爱买吧触屏版  爱买吧 手机版" />
+<meta name="Description" content="爱买吧触屏版   爱买吧商城 "/>
+<link rel="stylesheet" href="__STATIC__/css/public.css?v=20170830">
+<link rel="stylesheet" href="__STATIC__/css/user.css?v=20170830">
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<script type="text/javascript" src="__STATIC__/js/modernizr.js"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js" ></script>
+</head>
+<style type="text/css">
+	/*为了不跟public.css冲突*/
+	.Wallet{padding: 0px 10px;width: auto;}
+	.Wallet a{width: auto;margin-left: 0px;}
+	.Wallet a dl dd{margin-right: 40px;}
+	.Wallet em{margin-top: 10px;}
+
+</style>
+<body>
+<div id="tbh5v0">
+<div class="user_com">
+
+<include file="public/uer_topnav"/>
+
+<!--<div class="Wallet">
+	<ul>
+	<li class="bain1"><strong>￥{$user['user_money']}元</strong><span>余额</span></li>
+	<li class="bain1"><strong>{$coupon_count}</strong><span>优惠券</span></li>
+	<li><strong>{$user['pay_points']}</strong><span>能量</span></li>
+	</ul>
+	<a href="{:U('Mobile/User/account')}"><em class="Icon Icon1"></em><dl><dt>我的钱包</dt><dd style="color:#aaaaaa;">查看我的钱包</dd></dl></a>
+</div>-->
+
+
+<div class="padding_10_20 background_white">
+	<div class="display_flex ">
+		<div class="flex_1 font_size_16 text_center">
+
+				<div style="height: 50px;line-height: 50px;">
+					<a href="{:U('Mobile/User/my_order')}"><img src="__STATIC__/images/all_order_icon.png"width="24" height="30"/></a>
+				</div>
+				<div>我的订单</div>
+
+		</div>
+		<div class="flex_1 text_center font_size_16">
+
+				<div style="height: 50px;line-height: 50px;">
+					<a href="{:U('Mobile/User/comment')}"><img src="__STATIC__/images/xin/my_comment.png"width="28" height="30"/></a>
+				</div>
+				<div>我的评价</div>
+
+		</div>
+		<div class="flex_1 text_right font_size_16 text_center">
+
+				<div style="height: 50px;line-height: 50px;">
+					<a href="{:U('Mobile/User/collect_list')}"><img src="__STATIC__/images/xin/my_like.png"width="28" height="30"/></a>
+				</div>
+				<div>我的收藏</div>
+
+		</div>
+	</div>
+	<!--<a href="{:U('User/points')}"><em class="Icon Icon21"></em><dl class="b"><dt>能量余额</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('Mobile/User/userinfo')}"><em class="Icon Icon25"></em><dl  class="b"><dt>我的信息</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('User/address_list')}"><em class="Icon Icon24"></em><dl><dt>我的地址</dt><dd>&nbsp;</dd></dl></a>-->
+</div>
+<div class="Wallet">
+	<a href="{:U('User/mobile_binding',array('url_page'=>'direct'))}">
+		<em class="Icon Icon27"></em>
+		<dl class="b">
+			<dt>手机绑定</dt>
+			<dd>
+				<if condition="$user[mobile] neq '' ">
+					已绑定
+				<else>
+					未绑定
+				</if>
+				&nbsp;
+			</dd>
+		</dl>
+	</a>
+	<a href="{:U('Mobile/User/set_pwd')}"><em class="Icon Icon28"></em><dl  class="b"><dt>密码设置</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('User/address_list')}"><em class="Icon Icon24"></em><dl><dt>我的地址</dt><dd>&nbsp;</dd></dl></a>
+
+</div>
+<div class="Wallet">
+
+	<!--<a href="{:U('Mobile/User/my_order')}"><em class="Icon Icon16"></em><dl class="b"><dt>我的订单</dt><dd>&nbsp;</dd></dl></a>-->
+	<!--<a href="{:U('Mobile/User/collect_list')}"><em class="Icon Icon23"></em><dl class="b"><dt>我的收藏</dt><dd>&nbsp;</dd></dl></a>-->
+	<a href="{:U('Mobile/User/my_consults')}"><em class="Icon Icon29"></em><dl class="b"><dt>我的咨询</dt><dd>查看咨询</dd></dl></a>
+	<!--<a href="{:U('Mobile/User/comment')}"><em class="Icon Icon22"></em><dl class="b"><dt>我的评价</dt><dd>查看评价</dd></dl></a>-->
+	<a onclick="show_mask()" ><em class="Icon Icon18"></em><dl ><dt>呼叫客服</dt><dd>&nbsp;</dd></dl></a>
+</div>
+<!--<div class="Wallet">
+	<a href="{:U('Mobile/User/logout')}"><em class="Icon Icon20"></em><dl ><dt>退出登录</dt><dd>&nbsp;</dd></dl></a>
+
+</div>-->
+<div style="padding: 10px;">
+	<div class="" style="text-align: center;line-height: 46px;background: #FFFFFF;border-radius: 10px;background: red;">
+		<a href="#" onclick="show_logout()"  style="display: block;color: #FFFFFF;">退出登录</a>
+
+	</div>
+</div>
+
+<div style="height: 30px;">
+
+</div>
+<!--
+<div class="Wallet">
+	<a href="{:U('User/logout')}"><em class="Icon Icon8"></em><dl><dt>注销登录</dt></dl></a>
+</div>
+-->
+</div>
+<include file="public/footer"/>
+</div>
+<include file="public/footer_nav"/>
+</body>
+<script type="text/javascript">
+	function show_mask(){
+		layer.open({
+		  		type: 1,
+		  		title: false,
+		  		closeBtn:0,
+		  		shadeClose: true,
+		  		content:'<div class="actionsheet"style="width:250px;">'+
+							'<div class="actionsheet_menu"style="width:250px;">'+
+								'<div class="actionsheet_content">是否呼叫客服电话?</div>'+
+								'<div class="actionsheet-flex ">'+
+			        		'<div class="actionsheet-flex__item actionsheet_cancel_btn" onclick=" layer.closeAll()">取消</div>'+
+		              '<div class="actionsheet-flex__item actionsheet_confirm_btn" onclick="layer.closeAll()" ><a href="tel:075521613170">呼叫</a></div>'+
+		           	' </div>'+
+							'</div>'+
+						'</div>'
+		 });
+	}
+	//退出登录
+	function show_logout(){
+		layer.open({
+		  		type: 1,
+		  		title: false,
+		  		closeBtn:0,
+		  		shadeClose: true,
+		  		skin: 'layui-layer-lan',
+		  		content:'<div class="actionsheet"style="width:250px;">'+
+							'<div class="actionsheet_menu"style="width:250px;">'+
+							'<div class="actionsheet_content">是否退出登录？</div>'+
+								'<div class="actionsheet-flex ">'+
+			        		'<div class="actionsheet-flex__item actionsheet_cancel_btn" onclick=" layer.closeAll()">取消</div>'+
+		              '<div class="actionsheet-flex__item actionsheet_confirm_btn" onclick="layer.closeAll()"><a href="{:U("Mobile/User/logout")}">确认</a></div>'+
+		            '</div>'+
+							'</div>'+
+						'</div>'
+		 });
+	}
+</script>
+</html>

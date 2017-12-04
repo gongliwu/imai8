@@ -1,0 +1,126 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+  <div id="append_parent"></div>
+  <div id="ajaxwaitid"></div>
+  <div class="page">
+    <div class="fixed-bar">
+      <div class="item-title">
+        <div class="subject">
+          <h3>手动抽奖用户列表</h3>
+          <h5>手动抽奖用户列表</h5>
+        </div>
+      </div>
+    </div>
+    <div class="flexigrid">
+      <div class="mDiv">
+        <div class="ftitle">
+          <h3>手动抽奖用户列表</h3>
+          <!--<h5>(共{#$pager->totalRows#}条记录)</h5>-->
+          <h5>(共{$user_count}条记录)</h5>
+        </div>
+        <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+        <form id="search-form2" class="navbar-form form-inline"  method="post" action="{:U('/Admin/LuckDraw/getUsersByLuckId')}">
+          <div class="sDiv">
+            <div class="sDiv2">
+              <input type="text" class="qsbox" id="input-order-id" placeholder="搜索词" value="{$_POST['keyword']}" name="keyword">
+              <input type="hidden" name="luck_id" value="{$luck_draw.luck_id}">
+              <input type="submit" class="btn" value="搜索">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="hDiv">
+        <div class="hDivBox">
+          <table cellspacing="0" cellpadding="0" style="width: 100%;">
+            <thead>
+              <tr>
+                <th align="left" abbr="goods_id"  class="">
+                  <div style="text-align: left; width: 60px;" class="">用户uid</div>
+                </th>
+                <th align="left" abbr="head_pic"  class="">
+                  <div style="text-align: left; width: 50px;" class="">用户头像</div>
+                </th>
+                <th align="left" abbr="nickname"  class="">
+                  <div style="text-align: left; width: 200px;" class="">昵称</div>
+                </th>
+                <th align="left" abbr="mobile"  class="">
+                  <div style="text-align: left; width: 100px;" class="">手机号</div>
+                </th>
+                <th align="left" abbr="joined_times"  class="">
+                  <div style="text-align: left; width: 100px;" class="">参与次数</div>
+                </th>
+                <th align="left" abbr="add_time"  class="">
+                  <div style="text-align: left; width: 150px;" class="">参与时间</div>
+                </th>
+                <th align="left" abbr="luck_user"  class="">
+                  <div style="text-align: left; width: 150px;" class="">操作</div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="bDiv">
+              <volist name="users" id="vo">
+                <tr>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 60px;">{$vo.user_id}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 50px;">
+                      <img src="{$vo.head_pic|default='__STATIC__/images/user68.jpg'}" style="width: 50px">
+                    </div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 200px;">{$vo.nickname}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 100px;">{$vo.mobile}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 100px;">{$vo.joined_times}</div>
+                  </td>
+                  <td align="center" class="">
+                    <div style="text-align: left; width: 150px;">{:date('Y-m-d H:i:s',$vo.add_time)}</div>
+                  </td>
+                  <td>
+                    <div style="text-align: left; ">
+                      <?php if($luck_draw['good_luck_user_id']== 0){?>
+                        <a href="JavaScript:void(0);" onClick="openLuck({$luck_draw.luck_id},{$vo.user_id},{$vo.order_id})" class="btn blue">
+                          设置为中奖人
+                        </a>
+                      <?php } else if($luck_draw['good_luck_user_id'] == $vo['user_id']){?>
+                         中奖人
+                      <?php } ?>
+                    </div>
+                  </td>
+                </tr>
+              </volist>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  	 <!--分页位置-->
+      <!--{#$pager->show()#}-->
+      <div style="height:10px;"></div>
+    </div>
+  </div>
+</body>
+<script>
+// 开奖
+function openLuck(luck_id,user_id,order_id){
+  $.post(
+    "{:U('Admin/LuckDraw/ajaxOpenLuck')}",
+    {luck_id:luck_id,user_id:user_id,order_id:order_id},
+    function(data){
+        if(data.status ==1){
+          layer.alert(data.msg, {
+              icon: 1,
+              closeBtn: 0
+          }, function(){
+              window.location.href = "{:U('Admin/LuckDraw/index')}";
+          });
+        }else{
+          layer.msg(data.msg, {icon: 2,time: 2000});
+        }
+  });
+}
+</script>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>支付完成</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+        <link rel="stylesheet" href="__STATIC__/css/example.css"/>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+    </head>
+    <body>
+        <div class="container" id="container"></div>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item title">
+                购买成功
+            </div>
+        </div>
+
+        <div class="weui-loadmore" id="loading">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在努力创建保单中</span>
+        </div>
+        
+    <div id="sucess" style="display: none;">
+        <div class="weui-flex">
+            <div class="weui-flex__item step">1.立即购买</div>
+            <div class="weui-flex__item step">2.确认订单</div>
+            <div class="weui-flex__item step setup-current">3.购买成功</div>
+        </div>
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title"><?php echo $email; ?></h2>
+                <p class="weui-msg__desc">电子保单已经发送到您的邮箱</p>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="./orderdetail.html?order_id=<?php echo $order_id; ?>" class="weui-btn weui-btn_primary">确认</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="error" style="display: none;">
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title"><?php echo $email; ?></h2>
+                <p class="weui-msg__desc">电子保单稍后发送到您的邮箱</p>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="./orderdetail.html?order_id=<?php echo $order_id; ?>" class="weui-btn weui-btn_primary">确认</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+     <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__text">深圳市木棉花云网络科技有限公司 提供技术支持</p>
+        </div>
+    </div>
+
+<input type="hidden" name="order_id" id="order_id" value="<?php echo $order_id; ?>">
+<script type="text/javascript" src="__STATIC__/js/zepto.min.js"></script>
+<script type="text/javascript">
+var running_time = 0;
+$(function(){
+    get_order_info();
+});
+
+function get_order_info() {
+    var now = new Date();
+    console.log(now.getTime());
+    setTimeout(function(){
+        var order_id = $('#order_id').val();
+        $.getJSON('./apiorderdetail.html', {'order_id': order_id}, function(json, textStatus) {
+            var order_status = parseInt(json['order_status']);
+            running_time++;
+            if (order_status == 3) {
+                $('#loading').hide();
+                $('#sucess').show();
+                return;
+            }
+
+            if (running_time >= 60) {
+                $('#loading').hide();
+                $('#error').show();
+                return;
+            }
+
+            get_order_info();
+
+        });
+    }, 1000);
+}
+
+</script>
+    </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>我的保险订单</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+        <link rel="stylesheet" href="__STATIC__/css/example.css"/>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+        <style type="text/css">
+            .weui-media-box__desc{line-height: 1.8;}
+            .weui-btn{padding-left: 8px; padding-right: 8px; border-radius:0px;}
+            .weui-btn+.weui-btn{margin-top: 0px; margin-right: 20px; margin-left: 15px;}
+            .weui-btn:after{border-radius: 0px;}
+            .weui-btn_default{background-color: #fff; color: #777;}
+        </style>
+    </head>
+    <body>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="title">
+                    <a class="title-back" href="javascript:history.back(-1)">&nbsp;</a>
+                    <p>我的保险订单</p>
+                </div>
+            </div>  
+        </div>
+
+        <?php foreach ($order_list as $order):?>
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">
+                <a href="{:U('Mobile/Insurance/orderdetail', array('order_id'=>$order[order_id]))}" class="weui-cell weui-cell_access" style="padding: 0px;">
+                    <div class="weui-cell__bd">订单状态：
+                    <?php if($order['order_status'] == 1): ?>待付款
+                    <?php elseif($order['order_status'] == 2): ?>已付款
+                    <?php elseif($order['order_status'] == 3): ?>已完成
+                    <?php elseif($order['order_status'] == 4): ?>已取消
+                    <?php endif; ?>
+                    </div>
+                    <span class="weui-cell__ft"></span>
+                </a>
+            </div>
+            <div class="weui-panel__bd">
+                <a href="{:U('Mobile/Insurance/orderdetail', array('order_id'=>$order[order_id]))}" class="weui-media-box weui-media-box_appmsg">
+                    <div class="weui-media-box__hd">
+                        <img class="weui-media-box__thumb" src="__STATIC__/img/chinalife.jpg" alt="">
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <p class="weui-media-box__desc">订单编号：<?php echo $order['order_id']; ?></p>
+                        <p class="weui-media-box__desc">订单金额：<?php echo $order['order_amount'] ?>元</p>
+                        <p class="weui-media-box__desc">下单时间：<?php echo date('Y-m-d H:i:s', $order['order_time']); ?></p>
+                    </div>
+                </a>
+            </div>
+            <?php if($order['order_status'] == 1): ?>
+            <div class="weui-panel__ft" style="text-align: right; margin-bottom: 15px;">
+                <a class="weui-btn weui-btn_mini weui-btn_default" href="{:U('Mobile/Insurance/cancelorder', array('order_id'=>$order[order_id]))}">取消订单</a>
+                <a class="weui-btn weui-btn_mini weui-btn_primary" href="{:U('Mobile/Insurance/orderdetail', array('order_id'=>$order[order_id], 'ispay'=>1))}">立即支付</a>
+                
+            </div>
+            <?php endif; ?>
+
+        </div>
+        <?php endforeach;?>
+
+    <?php if(empty($order_list)): ?>
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">暂无订单</h2>
+            </div>
+        </div>
+    <?php endif; ?>
+
+        <br>
+                    
+    </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop v1.1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170830"/>
+<!--<link rel="stylesheet" type="text/css" href="__STATIC__/css/index.css"/>-->
+<style type="text/css">
+.pics {
+  height: 40px;
+}
+
+/*为了不跟首页冲突*/
+
+.top_gb{
+	    display: block;
+    float: left;
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 1px;
+    left: 5px;
+}
+
+/*说明*/
+.state_wrap{color: #333;font-size: 11px;}
+.fl{float: left;}
+.fr{float: right;text-align: right;}
+</style>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<!--<script type="text/javascript" src="__STATIC__/js/TouchSlide.1.1.js"></script>-->
+<script type="text/javascript" src="__STATIC__/js/jquery.json.js"></script>
+<!--<script type="text/javascript" src="__STATIC__/js/touchslider.dev.js"></script>-->
+<script type="text/javascript" src="__STATIC__/js/layer.js" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<!-- IE8及以下支持JSON -->
+<!--[if lt IE 9]>
+    <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
+<![endif]-->
+<!-- WSDK-->
+<!--<script src="https://g.alicdn.com/aliww/h5.openim.sdk/1.0.6/scripts/wsdk.js"></script>-->
+</head>
+<body >
+	<header>
+      <div class="tab_nav">
+        <div class="header">
+          <div class="h-left"><a class="sb-back" href="{:U('Mobile/User/index')}" title="返回"></a></div>
+          <div class="h-mid">我的咨询</div>
+          <div class="h-right">
+            <!--<aside class="top_bar">
+              <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+            </aside>-->
+          </div>
+        </div>
+      </div>
+	</header>
+
+	<div>
+		<input type="hidden" name="" id="luckid" value="{$luck_id}" />
+		<div>
+			<div id="J_ItemList">
+		    		<ul ></ul>
+
+		  	</div>
+
+		  	<!--<div id="getmore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;">
+		  		<a href="javascript:void(0)" onClick="getGoodsList()">点击加载更多</a>
+		  	</div>-->
+		</div>
+
+	</div>
+	<a href="javascript:;" class="get_more" style="text-align:center; display:block;">
+		<img src='__STATIC__/images/category/loader.gif' width="12" height="12">
+	</a>
+	<div id="listEmpty" style="text-align: center;margin-top: 50px;display: none;">
+		暂无咨询
+	</div>
+	<div style="height: 30px;">
+
+	</div>
+</body>
+<script type="text/javascript">
+var geturl = "/index.php?m=Mobile&c=User&a=ajax_my_consults&p=";
+
+var page = 1;
+var hasMore = true;
+$(function(){
+	getGoodsList();
+});
+
+function getGoodsList(){
+	if (hasMore) {
+		$('.get_more').show();
+		$.ajax({
+			type : "post",
+			url:geturl+page,
+			success: function(data)
+			{
+				if($.trim(data)!=''){
+					$("#J_ItemList>ul").append(data);
+					page++;
+					$('.get_more').hide();
+				}else{
+					if (page==1) {
+						$("#listEmpty").show();
+					}
+					hasMore = false;
+					$('.get_more').hide();
+//					$('#getmore').remove();
+				}
+			}
+		});
+	}
+
+}
+
+//上拉加载更多
+var mybody = document.getElementsByTagName('body')[0];
+var startX, startY, moveEndX, moveEndY, X, Y;
+mybody.addEventListener('touchstart', function(e) {
+	startX = e.touches[0].pageX;
+	startY = e.touches[0].pageY;
+});
+//mybody.addEventListener('touchmove', function(e) {
+//	moveEndX = e.changedTouches[0].pageX;
+//	moveEndY = e.changedTouches[0].pageY;
+//	X = moveEndX - startX;
+//	Y = moveEndY - startY;
+//	if ( Y < -60) {
+//		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+////				e.preventDefault();
+//				getGoodsList();
+//
+//			 }
+//    }
+//
+//
+//});
+mybody.addEventListener('touchend', function(e) {
+	moveEndX = e.changedTouches[0].pageX;
+	moveEndY = e.changedTouches[0].pageY;
+	X = moveEndX - startX;
+	Y = moveEndY - startY;
+	if ( Y < -60) {
+		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+//				e.preventDefault();
+				getGoodsList();
+		}
+    }
+
+
+});
+</script>
+</html>

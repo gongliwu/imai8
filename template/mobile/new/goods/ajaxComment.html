@@ -1,0 +1,106 @@
+
+<if condition="$ttype eq 1">
+ 
+	<if condition="$count gt 0">
+	
+		      <foreach name="commentlist" item="v" key="k">
+		      <if condition="$v.is_show eq 1">
+		          <li class="comment_item">
+		            <div class="content_head" <if condition="($k+1) eq count($comment_list)"> style="border-bottom:0px solid #CCC;"<else/>style="border-bottom:1px solid #CCC;"</if>>
+		                  <div class="info">
+		                    <div class=" comment_star">
+		                      <div class="one"><em>		<img src="{$v['head_pic']|default='__STATIC__/images/user68.jpg'}" style="width: 50px"><span>{$user['nickname']}</span></em></div>
+		                      <div class="name"style="font-size: 14px;">
+		                      	<?php
+									$username = substr_cut($v['nickname']);
+								?>
+		                            {$username}
+		                            <em><img src="__STATIC__/images/stars{$v.service_rank}.png" alt="" /></em>
+		                      </div>
+		                       <div class="two"style="font-size: 12px;">{:date('Y-m-d H:i',$v.add_time)}</div>
+		                    </div>
+		                  </div>
+		                  <p style="font-size: 14px;"> {$v['content']|htmlspecialchars_decode}</p>
+		                 <!---晒单-->
+		                <if condition="$v['img'] neq ''">
+		                    <!--<div class="shaidan">
+		                      <h4>{$value.title}</h4>
+		                      <p>{$value.content}</p>
+		                    </div>-->
+		                        <div class="sd_img">
+		                        <dl id="gallery">
+		                            <foreach name="v['img']" key="key" item="v2">
+		                                <dd>
+		                                    <a href="{$v2}"><img src="{$v2}" width="100px" heigth="100px"></a>
+		                                </dd>
+		                            </foreach>
+		                        </dl>
+		                        </div>
+		                </if>
+		
+		                <!--管理员回复-->
+		                <foreach name="replyList" item="val">
+		                    <if condition="$val['parent_id']  eq $v['comment_id']">
+		                        <p style=" color:#F60; border-top:1px dashed #e5e5e5; padding-top:8px; margin-top:10px"><span>管理员{$val.username}回复：<br></span>{$val.content}</p>
+		                    </if>
+		                </foreach>
+		            </div>
+		          </li>
+		     </if>
+		     </foreach>
+			
+	</if>
+	
+	
+<else>
+	
+	<if condition="$count gt 0">
+		
+		      <foreach name="commentlist" item="v" key="k">
+		      <if condition="$v.is_show eq 1">
+		          <div class="comment_item">
+		            <div class="content_head"style="display: flex;text-align: left;padding: 10px 10px ;background: #FFFFFF;" >
+		                 
+		                  <div class="info" style="flex: 1;">
+		                    <div class=" comment_star" style="width: 100%;color: #D2D2D2;font-size: 14px;">
+		                      
+		                      <div class="name"style="font-size: 14px;color: #fda128;">
+		                      	<img src="{$v['head_pic']|default='__STATIC__/images/user68.jpg'}" style="width: 50px;height: 50px;border-radius: 50%;">
+		                      	<?php
+									$username = substr_cut($v['nickname']);
+								?>
+		                         &nbsp;&nbsp;{$username}
+		                            
+		                      </div>
+		                      <p style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">奖品：<span style="color: blue;">{$v['goods_name']}</span></p>
+		                      第{$v['period']}期
+		                       <br />
+		                       评价：<img src="__STATIC__/images/stars{$v.service_rank}.png"height="14" alt="" />
+		                       
+		                    </div>
+		                    <p style="font-size: 14px;line-height: 20px;margin-bottom: 5px;"> {$v['content']|htmlspecialchars_decode}</p>
+		                  
+		                  
+		                 <!---晒单-->
+		                <if condition="$v['img'] neq ''">
+		                    
+		                        <div class="sd_img">
+		                        <dl id="gallery">
+		                        		<dd>
+		                            		<foreach name="v['img']" key="key" item="v2">
+		                                		<img src="{$v2}" onclick="showImg(this)" style="width: 22%;height: 80px;margin: 5px 5px 0px 0px;">
+		                            		</foreach>
+		                            </dd>
+		                        </dl>
+		                        </div>
+		                </if>
+		                <div class="two"style="font-size: 12px;">{:date('Y-m-d H:i',$v.add_time)}</div>
+						</div>
+		                
+		            </div>
+		          </div>
+		     </if>
+		  </foreach>
+	</if>
+
+</if>

@@ -1,0 +1,19 @@
+<foreach name="users" item="v" key="k">
+ 	<li style="margin-bottom: 10px;border-bottom: 1px solid rgba(238,238,238,0.9);padding-bottom: 5px;background: #FFFFFF;">
+
+        <div style="display: flex;padding: 10px 10px;">
+	        <div style="width: 50px;">
+	        		<img style="width: 40px ;height: 40px;border-radius: 20px;" src='{$v.head_pic|default="__STATIC__/images/user68.jpg"}' alt="">
+	        </div>
+	        <div style="flex: 1;font-size: 14px;line-height: 20px;">
+	        		<?php
+					$nickname = substr_cut($v['nickname']);
+				?>
+	        		<p>{$nickname}</p>
+
+	        		<div>参与<span style="color: #F23030;">{$v.joined_times}</span>次&nbsp;&nbsp;{:date('Y-m-d H:i:s',$v.add_time)}</div>
+	        </div>
+         </div>
+   </li>
+
+</foreach>

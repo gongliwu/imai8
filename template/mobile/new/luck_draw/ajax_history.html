@@ -1,0 +1,23 @@
+<foreach name="history_list" item="v" key="k">
+ 	<li style="margin-bottom: 10px;border-bottom: 1px solid rgba(238,238,238,0.9);padding-bottom: 5px;background: #FFFFFF;">
+
+        <div class="hist">
+        		奖品：{$goods[goods_name]}
+        </div>
+        <div class="hist">
+        		第{$v.period}期
+        </div>
+        <div class="hist">
+        		<?php
+				$nickname = substr_cut($v['nickname']);
+			?>
+				<img style="width: 40px ;height: 40px;border-radius: 20px;" src='{$v.head_pic|default="__STATIC__/images/user68.jpg"}' alt="">
+        		&nbsp;&nbsp;<span style="color: #F23030;">{$nickname}</span>
+        </div>
+        <div class="hist">
+        		抽奖号码：<span style="color: #F23030;">{$v.luck_sn}</span>
+        </div>
+
+   </li>
+
+</foreach>

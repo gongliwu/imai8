@@ -1,0 +1,48 @@
+<volist name="list" id="item">
+    <li class="background_white" style="margin-bottom: 10px;">
+			<div class="display_flex padding_10_10_0_10 font_size_14">
+				<div class="fl">
+					订单编号：{$item.order_sn}
+				</div>
+				<div class="flex_1  text_right">
+					<if condition="$item['type'] eq 0">退款</if><if condition="$item['type'] eq 1">换货</if>
+				</div>
+			</div>
+			<div class="">
+				
+			</div>
+			<div class="display_flex padding_10_10">
+				<div class="goods_img">
+					<img src="{$item[goods_id]|goods_thum_images=200,200}"/>
+				</div>
+				<div class="flex_1 padding_left_10">
+					<div class="goods_name">
+						{$goodsList[$item[goods_id]]}
+					</div>
+					<!--<div class="goods_spec">
+						<span class="">
+							能量：{$item['exchange_integral']}
+						</span>
+						<span class="fr">
+							￥{$item['member_goods_price']}
+						</span>
+					</div>-->
+				</div>
+			</div>
+			<div class="display_flex padding_0_10_10_10">
+				<div class="flex_1">
+					<div class="goods_name">
+						申请时间：{$item.addtime|date="Y-m-d",###}
+					</div>
+					<div class="goods_name color_red">
+						 处理状态：<if condition="$item['status'] eq 0">待客服处理</if>
+                    		<if condition="$item['status'] eq 1">客服处理中</if>
+                    		<if condition="$item['status'] eq 2">已完成</if>    
+					</div>
+				</div>
+				<div class="flex_1 text_right">
+					<a class="padding_2_10 text_center" style="display: inline-block;border: 1px solid #D2D2D2;min-width: 80px;border-radius: 10px;margin-top: 12px;" href="{:U('User/return_goods_info',array('id'=>$item[id]))}">查看</a>
+				</div>
+			</div>
+		</li>
+</volist>

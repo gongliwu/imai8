@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>中国人寿财险车上人员意外险</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+        <link rel="stylesheet" href="__STATIC__/css/example.css"/>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+        <style type="text/css">
+            .btn-right{float: right; margin-right: 5px;}
+            .weui-btn+.weui-btn{margin-top: 0px;}
+            .weui-btn_mini{padding:0px;}
+            .weui-btn{padding-left: 8px; padding-right: 8px; border-radius:0px;}
+            .weui-btn:after{border-radius: 0px;}
+            .weui-btn_default{background-color: #fff; color: #777;}
+            .gradual {
+                position: absolute;
+                height: 25px;
+                width: 100%;
+                bottom: -2px;
+                left: 0;
+                background: url(__STATIC__/img/shadow_liner2_aa907d1.png) 0 -1px repeat-x;
+                top: 165px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container" id="container"></div>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="title">
+                    <a class="title-back" href="javascript:history.back(-1)">&nbsp;</a>
+                    <p>中国人寿财险车上人员意外险</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <img src="__STATIC__/img/banner.jpg" style="width: 100%;">
+                
+            </div>
+        </div>
+
+        <div class="weui-flex" style="background-color: #FFF;">
+            <div class="weui-flex__item" style="padding-left: 15px; padding-bottom: 10px;">
+                <h3>中国人寿财险车上人员意外险</h3>
+                <h5 style="color: #999; font-weight: normal;">该产品由中国人寿财险承保并负责理赔</h5>
+            </div>
+        </div>
+        
+        
+        <div class="weui-cells__title">请选择</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label" style="color: #999; width: 200px;">商品总价：<span id="price_label" style="color: red; font-weight: bold; font-size: 1.3em;"></span></label></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">车载座数</label></div>
+                <div class="weui-cell__bd">
+                    <button name="car_num" value="7" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('car_num', '7');">7座</button>
+                    <button name="car_num" value="5" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('car_num', '5');">5座</button>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">车载使用性质</label></div>
+                <div class="weui-cell__bd">
+                    <button name="car_type" value="2" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('car_type', '2');">非营业客车</button>
+                    <button name="car_type" value="1" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('car_type', '1');">家庭自用车</button>
+                    
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label" style="width: 75px;">保障额度</label></div>
+                <div class="weui-cell__bd">
+                    <button name="insurance_amount" value="50" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('insurance_amount', '50');" style="padding: 0px 5px;">50万</button>
+                    <button name="insurance_amount" value="40" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('insurance_amount', '40');" style="padding: 0px 5px;">40万</button>
+                    <button name="insurance_amount" value="30" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('insurance_amount', '30');" style="padding: 0px 5px;">30万</button>
+                    <button name="insurance_amount" value="20" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('insurance_amount', '20');" style="padding: 0px 5px;">20万</button>
+                    <button name="insurance_amount" value="10" class="weui-btn weui-btn_mini weui-btn_default btn-right" onclick="select_params('insurance_amount', '10');" style="padding: 0px 5px;">10万</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:buy_now();">立即购买</a>
+        </div>
+
+        <div class="weui-panel">
+            <div class="weui-panel__hd">详情</div>
+            <div class="weui-panel__bd">
+                <p style="background-color: #009B62; color: #fff; text-align: center; line-height: 35px;">投保年龄 18-60周岁 保障期限 1年</p>
+                <img src="__STATIC__/img/detail1.jpg" style="height: auto; width: 100%; display: block;">
+                <img src="__STATIC__/img/detail2.jpg" style="height: auto; width: 100%; display: block;">
+                <img src="__STATIC__/img/detail3.jpg" style="height: auto; width: 100%; display: block;">
+                <img src="__STATIC__/img/detail4.jpg" style="height: auto; width: 100%; display: block;">    
+                <img src="__STATIC__/img/detail5.jpg" style="height: auto; width: 100%; display: block;">            
+            </div>
+        </div>
+
+        <div style="height: 20px;"></div>
+
+<form action="./create" method="POST" id="insurance_form">
+    <input type="hidden" name="car_num" id="car_num" value="<?php echo $car_num;?>">
+    <input type="hidden" name="car_type" id="car_type" value="<?php echo $car_type;?>">
+    <input type="hidden" name="insurance_amount" id="insurance_amount" value="<?php echo $insurance_amount;?>">
+    <input type="hidden" name="price" id="price" value="">
+</form>
+
+
+
+
+<script type="text/javascript" src="__STATIC__/js/zepto.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    var car_num = $('#car_num').val();
+    var car_type = $('#car_type').val();
+    var insurance_amount = $('#insurance_amount').val();
+
+    select_params('car_num', car_num);
+    select_params('car_type', car_type);
+    select_params('insurance_amount', insurance_amount);
+
+    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+        $(this).parents('.js_dialog').fadeOut(200);
+    });
+
+});
+
+/**
+ * 选择参数
+ */
+function select_params(name, value) {
+    $('button[name='+name+']').each(function(index, el) {
+        var $btn = $(this);
+        if ($btn.hasClass('weui-btn_primary')) {
+            $btn.addClass('weui-btn_default');
+            $btn.removeClass('weui-btn_primary');
+        }
+    });
+
+    var $click_btn = $('button[name="'+name+'"][value="'+value+'"]').first();
+    $click_btn.addClass('weui-btn_primary');
+    $click_btn.removeClass('weui-btn_default');
+
+    $('#'+name).val(value);
+
+    select_price();
+}
+
+/**
+ * 立刻购买
+ */
+function buy_now() {
+    $('#insurance_form').submit();
+    return true;
+}
+
+/**
+ * 价格变化
+ */
+function select_price() {
+    var car_num = $('#car_num').val();
+    var insurance_amount = $('#insurance_amount').val();
+
+    var price_config = {
+        '10-5':150,
+        '10-7':210,
+        '20-5':300,
+        '20-7':420,
+        '30-5':450,
+        '30-7':630,
+        '40-5':600,
+        '40-7':840,
+        '50-5':750,
+        '50-7':1050,
+    };
+    var key = insurance_amount+'-'+car_num;
+    var price = price_config[key] + '元';
+    $('#price_label').text(price);
+
+}
+
+
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,115 @@
+<if condition="$status eq 0">
+
+
+<foreach name="lucks" item="v" key="k">
+ 	<li>
+        <a href="{:U('Mobile/LuckDraw/detail',array('luck_id'=>$v['luck_id']))}" title="{$v.goods_name}">
+           <div class="index_pro">
+      	       <div class="products_kuang"><img src="{$v.goods_id|goods_thum_images=400,400}"></div>
+      	       <div class="goods_name">{$v.goods_name}</div>
+      	       <if condition="$v['status'] eq 0">
+      	       		<div style="font-size: 14px;line-height: 18px;color: #f23030;text-align: left;padding-left: 10px;">
+      	       			第{$v.period}期&nbsp;&nbsp;进行中
+      	       		</div>
+      	       	<else>
+      	       		<div style="font-size: 14px;line-height: 18px;color: #f23030;text-align: left;padding-left: 10px;">
+      	       			已结束
+      	       		</div>
+      	       </if>
+      	       <div class="pics">
+					<img src="__STATIC__/images/integral_icon.png" alt="">
+					<span  class="integral">能量:{$v.pay_integral}</span>
+                  	<i>总需{$v.total_times}人次</i>
+      	       </div>
+        <?php
+       		$persent = 0;
+       		if ($v['joined_times'] > 0) {
+       			$_persent = ($v['joined_times']/$v['total_times']) * 100;
+            if (0 < $_persent && $_persent < 1) {
+              $persent = 1;
+            } elseif(99 < $_persent && $_persent < 100) {
+              $persent = 99;
+            } else {
+              $persent = round($_persent, 0);
+            }
+       		}
+       	?>
+       			<!--<div style="padding: 0px 5px;">
+       				<div class="progress_wrap">
+						<div class="progress_bar"style="width: {$persent}%;">
+							<span id="">
+								&nbsp;&nbsp;{$persent}%&nbsp;&nbsp;
+							</span>
+							
+						</div>
+					</div>
+       			</div>
+       			<div style="height: 20px;">
+       				
+       			</div>-->
+       			<div style="clear: both;">
+       				
+       			</div>
+       			<div style="padding: 0px 5px;">
+	       			<div class="progress_wrap">
+				      <span class="progress_red" style="width: {$persent}%;"><span>&nbsp;{$persent}%&nbsp;</span></span>
+				    </div>
+				</div>
+				<div style="padding: 0px 5px;">
+				<div class="state_wrap">
+					<div class="fl">
+						已参与{$v.joined_times}人次
+					</div>
+					<?php  $rest = $v['total_times'] - $v['joined_times']; ?>
+					<div class="fr">
+						剩余{$rest}人次
+					</div>
+				</div>
+            </div>
+            </div>
+        </a>
+   </li>
+
+</foreach>
+<else>
+	<foreach name="lucks" item="v" key="k">
+ 	<li>
+        <a href="{:U('Mobile/LuckDraw/detail',array('luck_id'=>$v['luck_id']))}" title="{$v.goods_name}">
+           <div class="index_pro">
+      	       <div class="products_kuang"><img src="{$v.goods_id|goods_thum_images=400,400}"></div>
+      	       <div class="goods_name">{$v.goods_name}</div>
+      	       
+      	       <div class="pics">
+					<span >第{$v.period}期&nbsp;&nbsp;结束</span>
+                  	
+      	       </div>
+      	       <div style="clear: both;"></div>
+       			<div class="pics">
+					
+					<span style="color: #333;">所需能量:</span>
+					<span >
+						{$v.pay_integral}
+					</span>
+                  	<i>总需{$v.total_times}人次</i>
+      	       </div>
+      	       <div style="clear: both;"></div>
+				<div style="padding: 0px 5px;text-align: left;">
+					 	<?php
+							$nickname = substr_cut($v['good_luck_nickname']);
+						?>
+					<div class="">
+						获得者：<span style="color: #fda128;">{$nickname}</span>
+					</div>
+					<div class="">
+						抽奖号：<span style="color: red;">{$v['luck_sn']}</span>
+					</div>
+					<!--<div class="">
+						本期参与：{$v['good_luck_total_times']}次
+					</div>-->
+            		</div>
+            </div>
+        </a>
+   </li>
+
+</foreach>
+</if>

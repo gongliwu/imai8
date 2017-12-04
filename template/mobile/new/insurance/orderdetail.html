@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>订单详情</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+        <link rel="stylesheet" href="__STATIC__/css/example.css"/>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+        <style type="text/css">
+            .weui-media-box__desc{line-height: 1.8;}
+            .red{color: red;}
+        </style>
+    </head>
+    <body>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="title">
+                    <a class="title-back" href="javascript:history.back(-1)">&nbsp;</a>
+                    <p>订单详情</p>
+                </div>
+            </div>  
+        </div>
+
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_text">
+                    <p class="weui-media-box__desc">订单编号：<?php echo $order['order_id']; ?></p>
+                    <p class="weui-media-box__desc">下单时间：<?php echo date('Y-m-d H:i:s', $order['order_time']); ?></p>
+
+                <?php if($order['pay_status'] == 2): ?>
+                    <p class="weui-media-box__desc">支付渠道：<?php echo ($order['pay_method'] == 'alipay') ? '支付宝' : '微信支付' ?></p>
+                <?php endif; ?>
+
+                    <p class="weui-media-box__desc">订单状态：
+                    <?php if($order['order_status'] == 1): ?><span style="color: #009B62;">待付款</span>
+                    <?php elseif($order['order_status'] == 2): ?>已付款
+                    <?php elseif($order['order_status'] == 3): ?>已完成
+                    <?php elseif($order['order_status'] == 4): ?>已取消
+                    <?php endif; ?>
+                    </p>
+                </div>
+
+                <div class="weui-media-box weui-media-box_text">
+                    <p class="weui-media-box__desc">商品名称：中国人寿财险车上人员意外险</p>
+                    <p class="weui-media-box__desc">保障年限：1年</p>
+                    <p class="weui-media-box__desc">起保日期：<?php echo $order['insurance_begin_date']; ?></p>
+                    <p class="weui-media-box__desc">终保日期：<?php echo $order['insurance_end_date']; ?></p>
+                    <p class="weui-media-box__desc">保障额度：<?php echo $order['insurance_amount']; ?>万</p>
+                    <p class="weui-media-box__desc">车牌号码：<?php echo $order['car_no']; ?></p>
+                    <p class="weui-media-box__desc">驾驶员类型：<?php echo ($order['car_type'] == 1) ? '家庭自用车' : '非营业客车'; ?></p>
+                </div>
+                <div class="weui-media-box weui-media-box_text">
+                    <p class="weui-media-box__desc">投保人姓名：<label class="red"><?php echo $order['name']; ?></label></p>
+                    <p class="weui-media-box__desc">证件类型：身份证</p>
+                    <p class="weui-media-box__desc">证件号码：<label class="red"><?php echo $order['id_no']; ?></label></p>
+                    <p class="weui-media-box__desc">手机号码：<?php echo $order['mobile']; ?></p>
+                    <p class="weui-media-box__desc">电子邮箱：<?php echo $order['email']; ?></p>
+                </div>
+            
+                <div class="weui-media-box weui-media-box_text">
+                    <p class="weui-media-box__desc">保单号：<?php echo $order['insurance_no']; ?></p>
+                    <p class="weui-media-box__desc">电子保单：
+                    <?php if ($order['insurance_url']): ?>
+                        <a href="<?php echo $order['insurance_url']; ?>">查看电子保单</a>
+                    <?php endif; ?>
+                    </p>
+                </div>
+            
+            </div>
+        </div>
+
+    <?php if($order['order_status'] == 1): ?>
+        <div class="weui-btn-area" >
+            <button class="weui-btn weui-btn_primary" onclick="callpay('weixin');" style="margin-bottom: 20px;">立即支付</button>
+        </div>
+    <?php endif; ?>
+    <br>
+
+<input type="hidden" name="is_wechat" id="is_wechat" value="<?php echo $is_wechat; ?>">
+<input type="hidden" name="order_id" id="order_id" value="<?php echo $order['order_id']; ?>">
+<input type="hidden" name="order_sn" id="order_sn" value="<?php echo $order['order_sn']; ?>">
+<input type="hidden" name="order_amount" id="order_amount" value="<?php echo $order['order_amount']; ?>">
+<input type="hidden" name="openid" id="openid" value="<?php echo $openid; ?>">
+<input type="hidden" name="ispay" id="ispay" value="<?php echo $ispay; ?>">
+<input type="hidden" name="email" id="email" value="<?php echo $order['email']; ?>">
+
+<div id="dialogs">
+    <div class="js_dialog" id="tips" style="opacity: 0; display: none;">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd" id="tips_body">弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内</div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="__STATIC__/js/zepto.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="__STATIC__/js/weui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+        $(this).parents('.js_dialog').fadeOut(200);
+    });
+
+    var ispay = $('#ispay').val();
+    var is_wechat = $('#is_wechat').val();
+    if (ispay == '1' && is_wechat == '1') {
+        callpay('weixin');
+    } else if (ispay == '1') {
+        callpay('alipay');
+    }
+});
+
+function jsApiCall()
+{
+    var order_sn  = $('#order_sn').val();
+    var total_fee = $('#order_amount').val();
+    var openid    = $('#openid').val();
+
+    $.get("{:U('Mobile/wxjsapi/index')}", 
+        {'order_sn': order_sn, 'total_fee':total_fee, 'openid':openid}, 
+        function(json, textStatus) {
+            var appId = json['appId'];
+            var nonceStr = json['nonceStr'];
+            var package = json['package'];
+            var paySign = json['paySign'];
+
+            var request_obj = {}
+            var request_params = ['appId', 'nonceStr', 'package', 'paySign', 'signType', 'timeStamp'];
+            for (var i = 0; i < request_params.length; i++) {
+                var param = request_params[i];
+                request_obj[param] = json[param];
+            }
+
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', request_obj,
+                function(res){
+                    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+                   if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                        var email = $('#email').val();
+                        var order_id = $('#order_id').val();
+                        window.location.href = 'successful?order_id='+order_id+'&email='+encodeURIComponent(email);
+                   }
+                }
+            );
+    });
+
+}
+
+function callpay(pay_method)
+{
+    var order_id = $('#order_id').val();
+    $.getJSON('./apiorderdetail.html', {'order_id': order_id}, function(json, textStatus) {
+        var order_status = json['order_status'];
+        var tips_body = '';
+        if (order_status == '2') {
+            tips_body = '订单已经支付成功，无需再支付。';
+        } else if (order_status == '3') {
+            tips_body = '订单已经完成，无需再支付。';
+        } else if (order_status == '4') {
+            tips_body = '订单已经取消，不允许支付。';
+        }
+
+        if (json['ret'] && json['msg']) {
+            tips_body = json['msg'];
+        }
+
+        if (tips_body) {
+            $('#tips_body').text(tips_body);
+            $('#tips').fadeIn(200);
+            return;
+        }
+
+        if (order_status == '1') {
+            if (pay_method == 'weixin') {
+                if (typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                    }else if (document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+                        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                    }
+                }else{
+                    jsApiCall();
+                }
+
+            } else {
+                var alipay_href = $('#alipay_href').attr('alipayhref');
+                window.location.href = alipay_href;
+            }
+            
+
+            console.log('end callpay.');
+
+        }
+
+
+    });
+
+}
+
+
+</script>
+
+    </body>
+</html>

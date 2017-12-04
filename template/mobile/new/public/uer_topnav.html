@@ -1,0 +1,21 @@
+
+
+<div class="com_top display_flex padding_10_10">
+	<div class="" style="text-align: center;width: 90px;height: 130px;vertical-align: middle;line-height: 130px;">
+		<a  href="{:U('Mobile/User/userinfo')}">
+			<img style="width: 90px;height: 90px;border-radius: 45px;" src='{$user[head_pic]|default="__STATIC__/images/user68.jpg"}' />
+		</a>
+	</div>
+	<div class="flex_1 padding_left_10" style="vertical-align: middle;line-height: 165px;">
+		<div style="font-size: 20px;color: #FFFFFF;display: inline-block;line-height: 26px;">
+			<strong>{$user['nickname']}</strong>
+			
+			<p style="font-size: 16px;vertical-align: middle;">
+				<img src="__STATIC__/images/user_intergral.png"width="16"height="16"style="vertical-align: middle;margin-top: -3px;" alt="">
+				能量总额：{$user['pay_points']}
+			</p>
+		</div>
+		
+	</div>
+	
+</div>

@@ -1,0 +1,187 @@
+<include file="public/header"/>
+<style type="text/css">
+	.name label span{color: #333;font-weight: 900;}
+</style>
+<body class="background_white">
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="{:U('User/index')}" title="返回"></a></div>
+            <div class="h-mid">个人中心</div>
+            <div class="h-right">
+                <!--<aside class="top_bar">
+                    <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a
+                            href="javascript:;"></a></div>
+                </aside>-->
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="tbh5v0">
+    <div class="Personal">
+        <div id="tbh5v0">
+            <div class="innercontent1">
+            	<input type="file"style="display: none;" name="chang_head_pic" id="chang_head_pic" value="" onchange="changHeadpic()" />
+                <form method="post" action="" id="edit_profile" onSubmit="return checkinfo()">
+                		
+	                	<div style="text-align: center;">
+	                		<input type="hidden" name="head_pic"  value="{$user.head_pic}" />
+	                		<label for="chang_head_pic">
+	                			<img id="head_pic" src='{$user.head_pic|default="__STATIC__/images/user68.jpg"}'width="50"height="50"/>
+	                		</label>
+	                	</div>
+                    <div class="name"><span>昵　 称</span>
+                        <input type="text" name="nickname" id="nickname" value="{$user.nickname}" placeholder="*昵称"
+                               class="c-f-text">
+                    </div>
+                    <div class="name1"><span>性　 别</span>
+                        <ul>
+                            <li
+                            <?php if($user['sex']==0) {echo 'class="on"';} ?>   >
+                            <label for="sex0">
+                                <input type="radio" name="sex" value="0" tabindex="2" class="radio"
+                                       id="sex0" <?php if($user['sex']==0) {echo 'checked="checked"';} ?>>
+                                保密</label>
+                            </li>
+                            <li
+                            <?php if($user['sex']==1) {echo 'class="on"';} ?> >
+                            <label for="sex1">
+                                <input type="radio" name="sex" value="1" tabindex="3" class="radio"
+                                       id="sex1" <?php if($user['sex']==1) {echo 'checked="checked"';} ?> >
+                                男</label>
+                            </li>
+                            <li
+                            <?php if($user['sex']==2) {echo 'class="on"';} ?> >
+                            <label for="sex2">
+                                <input type="radio" name="sex" value="2" tabindex="4" class="radio"
+                                       id="sex2" <?php if($user['sex']==2) {echo 'checked="checked"';} ?>>
+                                女</label>
+                            </li>
+                        </ul>
+                    </div>
+                   
+                </form>
+                <div class="field submit-btn">
+                        <input type="submit" value="确认" class="btn_big1"onclick="updateInfo()"/>
+            		</div>
+            </div>
+	</div>
+</div>
+<script language="javascript">
+	$(function(){
+		$(".name1 ul li").each(function(key,row){
+			
+			$(row).click(function(){
+				$(".name1 ul li").removeClass("on");
+				$(row).addClass("on");
+			})
+		})
+	})
+	//提交
+	function updateInfo(){
+		updateHeadPic();
+		
+		$.ajax({
+				type:"post",
+				url:"{:U('User/chang_info')}",
+				async:false,
+				data:$("#edit_profile").serialize(),
+				success:function(res){
+					var result = JSON.parse(res);
+					alert(result.msg);
+					
+				}
+			});
+	}
+	//上传头像
+	function updateHeadPic(){
+		var filePic = $("#chang_head_pic").prop('files')[0];
+		
+		if(filePic){
+			var formData = new FormData();
+			formData.append("head_pic", filePic);
+			$.ajax({
+				type:"post",
+				url:"{:U('User/updateHeadPic')}",
+				cache:false,
+				contentType:false,
+				processData:false,
+				async:false,
+				data:formData,
+				success:function(res){
+					var result = JSON.parse(res);
+					
+					if (result.ret == 0) {
+						var newPic = result.data;
+						
+						$("input[name=head_pic]").val(newPic);
+					}
+					
+				}
+			});
+		}
+    		
+	}
+	
+	//改变头像
+	function changHeadpic(){
+		var filePic = $("#chang_head_pic").prop('files')[0];
+            reader = new FileReader();
+            
+            reader.onload = function() {
+                var result = this.result;   //result为data url的形式
+                    $("#head_pic").attr("src",result);
+                   
+            }
+            
+            reader.readAsDataURL(filePic);
+	}
+	
+    $(function () {
+    	if ($("#getmsg").val()) {
+		var msgtext = $("#getmsg").val();
+		layer.msg(msgtext, {time: 1500});
+	}
+	if ($("input[name=mobile]").val()==""||!$("input[name=mobile]").val()) {
+		$("#chang_pwd").hide();
+		$("#chang_mobile").val("绑定新手机");
+		$("#set_pwd").hide();
+	}else{
+		if ($("#getpwd").val().length>0) {
+			$("#chang_pwd").show();
+			$("#set_pwd").hide();
+		}
+		else{
+			$("#chang_pwd").hide();
+			$("#set_pwd").show();
+		}
+	}
+        $('input[type=text],input[type=password]').bind({
+            focus: function () {
+                $(".global-nav").css("display", 'none');
+            },
+            blur: function () {
+                $(".global-nav").css("display", 'flex');
+            }
+        });
+    })
+
+    function checkinfo() {
+        var nickname = $('#nickname').val();
+        var email = $('#email_ep').val();
+        if (nickname == '') {
+            alert("昵称不能为空");
+            return false;
+        }
+
+
+        return true;
+    }
+
+  
+   
+</script>
+</body>
+</html>

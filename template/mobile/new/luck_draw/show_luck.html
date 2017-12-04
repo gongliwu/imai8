@@ -1,0 +1,291 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop v1.1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>抽奖晒单-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170830"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/index.css?v=20170830"/>
+<style type="text/css">
+.pics {
+  height: 40px;
+}
+
+/*为了不跟首页冲突*/
+#J_ItemList{margin-top: 10px;}
+.top_gb{
+	    display: block;
+    float: left;
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 1px;
+    left: 5px;
+}
+.comment_item{margin-bottom: 10px;}
+/*说明*/
+.state_wrap{color: #333;font-size: 11px;}
+.fl{float: left;}
+.fr{float: right;text-align: right;}
+.luck_type{margin-top: 10px;}
+.luck_type li{float: left;width: 33%;background: #FFFFFF;text-align: center;color: #4D4D4D;margin-bottom: 0px !important;height: 40px !important;line-height: 40px;padding-bottom: 0px !important;}
+.luck_type li.on{color: #FFFFFF;background: red;}
+.luck_type li:nth-child(2){margin: 0px 0.5%;}
+.show_img {
+	float: left;margin-right: 10px;border: 1px solid #D2D2D2 !important;
+}
+.show_img.on{
+
+	border: 1px solid red !important;
+}
+
+</style>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<!--<script type="text/javascript" src="__STATIC__/js/TouchSlide.1.1.js"></script>-->
+<script type="text/javascript" src="__STATIC__/js/jquery.json.js"></script>
+<!--<script type="text/javascript" src="__STATIC__/js/touchslider.dev.js"></script>-->
+<script type="text/javascript" src="__STATIC__/js/layer.js?v=20170919" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<!-- IE8及以下支持JSON -->
+<!--[if lt IE 9]>
+    <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
+<![endif]-->
+<!-- WSDK-->
+<!--<script src="https://g.alicdn.com/aliww/h5.openim.sdk/1.0.6/scripts/wsdk.js"></script>-->
+</head>
+<body>
+<!--<div id="page" class="showpage">
+<div>-->
+<header id="header">
+	<div class="h-left top_gb">
+	      <a class="sb-back w" href="javascript:history.back(-1)" title="返回"></a>
+	</div>
+	<span href="javascript:void(0)" class="logo">抽奖晒单</span>
+</header>
+<input type="hidden" name="goods_id" id="goods_id" value="{$goods_id}" />
+
+
+<div class="floor_body2" >
+	<div id="J_ItemList">
+    		<ul class="product single_item info">
+    		</ul>
+    		<div class="comment_list" style="display: none;    width: 100%;overflow: hidden;margin-top: 50px;text-align: center;">
+			<div class="score">暂时还没有任何晒单</div>
+		</div>
+
+	</div>
+  <!--<div id="getmore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;">
+  	<a href="javascript:void(0)" onClick="getShowList()">点击加载更多</a>
+  </div>-->
+  	<div id="nomore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;display: none;">
+  		<a href="javascript:void(0)" >没有更多了~~</a>
+  	</div>
+  	<a href="javascript:;" class="get_more" style="text-align:center; display:block;">
+		<img src='__STATIC__/images/category/loader.gif' width="12" height="12">
+	</a>
+</div>
+
+<div class="md-mask">
+
+</div>
+<div class="md-modal" id="modal">
+
+</div>
+
+<script>
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600);
+}
+var page = 1;
+var hasMore = true;
+var goods_id = "";
+$(function(){
+	var id = $("input[name=goods_id]").val();
+	if (id > 0) {
+		goods_id = "&goods_id="+id;
+	}
+	getShowList();
+});
+
+function getShowList(){
+	if (hasMore) {
+		$('.get_more').show();
+		var getUrl  = "/index.php?m=Mobile&c=goods&a=ajaxComment&commentType=1&p="+page+"&ttype=2"+goods_id;
+
+		$.ajax({
+			type : "get",
+			url:getUrl,
+			success: function(data)
+			{
+				if($.trim(data) != ''){
+
+					$("#J_ItemList>ul").append(data);
+					page++;
+					$('.get_more').hide();
+				}else{
+					hasMore = false;
+					$('.get_more').hide();
+					$('#getmore').remove();
+					$("#nomore").show();
+				}
+			}
+		});
+	}
+}
+
+var w = 0;
+var left=0;
+var nowIndex = 0;
+var length = 0;
+function showImg(dom){
+	length = 0;
+	nowIndex = 0;
+	var p = [];
+	var str1 = $(dom).attr("src");
+	var str2="";
+	var arr = $(dom).parent().find("img");
+	if (arr) {
+		length = arr.length - 1;
+		var str = "";
+		w = $(window).width()-20;
+		var h = $(window).height()-40;
+		var oW = w/5;
+		var lgW = arr.length*w;
+		$.each(arr,function(key,row){
+			var src = $(row).attr("src");
+			p.push(src);
+			str2 += '<div class=""style="width:'+ (w-20) +'px;height:'+ (h-130) +'px;line-height:'+ (h-130) +'px;text-align:center;overflow: hidden;float:left;padding:0px 10px;">'+
+						'<img  src="'+ src +'" style="max-width: '+ (w-20) +'px;max-height:'+ (h-130) +'px;">'+
+					'</div>';
+			if (str1 == src) {
+				left = key*w;
+				nowIndex = key;
+				str += '<img src="'+ src +'"class="show_img on" width="50"height="50"onclick="changImg('+ key +')">';
+			}else{
+				str += '<img src="'+ src +'"class="show_img" width="50"height="50"onclick="changImg('+ key +')">';
+			}
+		})
+		var html = '<div class="actionsheet_menu"style="width:100%;height:auto;text-align:center;">'+
+									'<div class="closeModal" onclick="closeModal()">关闭&nbsp;&nbsp;</div>'+
+									'<div class=""style="width:'+ w +'px;height:'+ (h-130) +'px;line-height:'+ (h-130) +'px;text-align:center;overflow: hidden;padding:10px 0px;">'+
+										'<div id="show-img" style="width:'+ lgW +'px;height:'+ (h-130) +'px;position:relative;left:-'+ left +'px">'+
+											str2+
+										'</div>'+
+									'</div>'+
+									'<span style="display: inline-block;">'+
+										str+
+									'</span>'+
+								'<div class="scrollWrap" style="height:'+ (h-130) +'px;position: absolute;top: 40px;left: 0px;width: 100%;z-index: 60000;"></div></div>';
+		$(".md-mask").addClass("md-show-mask");
+		$("#modal").html("").append(html).addClass("md-show");
+
+
+	}
+
+}
+function changImg(index){
+//	var str = $(dom).attr("src");
+	left = -index*w;
+	nowIndex = index;
+	$("#show-img").css("left",left+"px");
+
+	$(".show_img").removeClass("on").eq(nowIndex).addClass("on");
+}
+function closeModal(){
+	$(".md-mask").removeClass("md-show-mask");
+	$("#modal").removeClass("md-show");
+}
+
+//滑动处理
+var mybody = document.getElementsByTagName('body')[0];
+var startX, startY, moveEndX, moveEndY, X, Y;
+mybody.addEventListener('touchstart', function(e) {
+//      e.preventDefault();
+	startX = e.touches[0].pageX;
+	startY = e.touches[0].pageY;
+});
+mybody.addEventListener('touchmove', function(e) {
+//      e.preventDefault();
+	moveEndX = e.changedTouches[0].pageX;
+	moveEndY = e.changedTouches[0].pageY;
+	X = moveEndX - startX;
+	Y = moveEndY - startY;
+	if ( Y < - 60) {
+		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+				getShowList();
+
+			 }
+      }
+});
+mybody.addEventListener('touchend', function(e) {
+	moveEndX = e.changedTouches[0].pageX;
+	moveEndY = e.changedTouches[0].pageY;
+	X = moveEndX - startX;
+	Y = moveEndY - startY;
+	if ( Y < - 60) {
+		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+			getShowList();
+		}
+    }
+
+    });
+
+
+//相册
+function scrollImg(direction){
+
+	nowIndex += direction;
+	if (nowIndex>length) {
+		nowIndex = 0;
+	} else if(nowIndex<0){
+		nowIndex = length;
+	}
+	left = nowIndex*w;
+	$("#show-img").css("left",-left+"px");
+	$(".show_img").removeClass("on").eq(nowIndex).addClass("on");
+}
+var mymodal = document.getElementById("modal");
+var mystartX, mystartY, mymoveEndX, mymoveEndY, myX, myY;
+mymodal.addEventListener('touchstart', function(e) {
+//      e.preventDefault();
+	mystartX = e.touches[0].pageX;
+	mystartY = e.touches[0].pageY;
+});
+//mymodal.addEventListener('touchmove', function(e) {
+////      e.preventDefault();
+//	mymoveEndX = e.changedTouches[0].pageX;
+//	mymoveEndY = e.changedTouches[0].pageY;
+//	myX = mymoveEndX - mystartX;
+//	myY = mymoveEndY - mystartY;
+//	if ( myX < - 60) {
+//		scrollImg(1);
+//    }
+//	if ( myX > 60) {
+//		scrollImg(-1);
+//    }
+//});
+mymodal.addEventListener('touchend', function(e) {
+	mymoveEndX = e.changedTouches[0].pageX;
+	mymoveEndY = e.changedTouches[0].pageY;
+	myX = mymoveEndX - mystartX;
+	myY = mymoveEndY - mystartY;
+	if ( myX < - 60) {
+		scrollImg(1);
+      }
+	if ( myX > 60) {
+		scrollImg(-1);
+      }
+    });
+
+</script>
+<a href="javascript:goTop();" class="gotop"><img src="__STATIC__/images/topup.png"></a>
+
+
+<!--<script src="__PUBLIC__/js/jqueryUrlGet.js"></script>--><!--获取get参数插件-->
+</body>
+</html>

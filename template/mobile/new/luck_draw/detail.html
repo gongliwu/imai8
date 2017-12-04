@@ -1,0 +1,425 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="tpshop" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{$luck.goods_name}_{$tpshop_config.shop_info_store_title}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170830"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/goods.css?v=20170830"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/layer.css?v=20170830"/>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__STATIC__/js/touchslider.dev.js"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js?v=20170919" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<script src="__STATIC__/js/common.js?v=20170830"></script>
+<style type="text/css">
+	.layermbox1 .layermchild{width: 95%;}
+.Wallet{    background: #FFF;
+    overflow: hidden;
+    border-bottom: 1px solid #dddcdc;
+    margin-top: 10px;
+    }
+    .Wallet a{
+    	/*margin-left: 10px;*/
+    height: 45px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 1px;
+    }
+    .Wallet a dl{
+    	    /*width: 100%;*/
+    	   border-top: 1px solid #dddcdc;
+    overflow: hidden;
+    }
+    .Wallet a dl dt {
+    float: left;
+    font-size: 16px;
+    line-height: 45px;
+    color: #666;
+    }
+    .Wallet a dl dd {
+    font-size: 12px;
+    line-height: 45px;
+    color: #aaaaaa;
+}
+.Wallet a dl dd {
+    float: right;
+    background: url(__STATIC__/images/arrow_right.png) no-repeat right center;
+    color: #aaaaaa;
+    background-size: auto 12px;
+    /*margin-right: 20px;*/
+    padding-right: 20px;
+}
+.banner{margin-top: 0px;}
+.add_btn{width: 80%;display: inline-block;border: 2px solid red;border-radius: 5px;background: red;height: 40px;text-align: center;line-height: 40px;color: #ffffff;}
+body .demo-class .layui-layer-btn{border-top:1px solid #E9E7E7}
+body{background: #FFFFFF;}
+.actionsheet_content{
+	height: auto;
+	border: none;
+	text-align: left;
+}
+</style>
+</head>
+<body>
+<script type="text/javascript">
+var process_request = "正在处理您的请求...";
+</script>
+<div class="header" style="text-align: center;">
+    	<div class="h-left top_gb">
+	      <a class="sb-back" href="{:U('Mobile/Luck_draw/index')}" title="返回"></a>
+	</div>
+ 	<span style="font-size: 16px;color: #333;line-height: 45px;">抽奖 - 商品详情</span>
+
+  </div>
+
+
+  <div class="main" id="user_goods_ka_1" style="display:block;margin-top: 45px;">
+	<div class="banner">
+	  <div id="slider" class="slider" style="overflow: hidden; visibility: visible; list-style: none; position: relative;">
+	    <ul id="sliderlist" class="sliderlist" style="position: relative; overflow: hidden; transition: left 600ms ease; -webkit-transition: left 600ms ease;">
+	       <foreach  name="goods_images_list" item="pic">
+	      	<li style="float: left; display: block; width: 100%;"><span><a  href="javascript:void(0)">
+	      	<img title="" width="100%" src="{$pic.image_url}"></a></span></li>
+	       </foreach>
+	    </ul>
+	    <div id="pagenavi">
+	    <foreach  name="goods_images_list" item="pic" key="k">
+	    	<a href="javascript:void(0);" <if condition="$k eq 0">class="active"</if>></a>
+	     </foreach>
+		</div>
+	  </div>
+	</div>
+	<div class="s_bottom"></div>
+<script type="text/javascript">
+	$(function(){
+	$("div.module_special .wrap .major ul.list li:last-child").addClass("remove_bottom_line");
+});
+var active=0,
+	as=document.getElementById('pagenavi').getElementsByTagName('a');
+
+for(var i=0;i<as.length;i++){
+	(function(){
+		var j=i;
+		as[i].onclick=function(){
+			t2.slide(j);
+			return false;
+		}
+	})();
+}
+var t2=new TouchSlider({id:'sliderlist', speed:600, timeout:6000, before:function(index){
+		as[active].className='';
+		active=index;
+		as[active].className='active';
+	}});
+</script>
+
+
+
+</div>
+
+
+<div style="padding: 10px 10px 0px 10px;">
+	<div class="luck_title">
+			{$luck.goods_name}
+	</div>
+
+	<div style="font-size: 12px;margin-top: -10px;">
+	  第&nbsp;<strong style="color: red;font-size: 16px;">{$luck.period}</strong>&nbsp;期&nbsp;&nbsp;&nbsp;&nbsp;满&nbsp;<span  class="jifen" style="color: red;font-size: 16px;">{$luck.pay_integral}</span>&nbsp;能量抽奖一次
+	</div>
+	<?php
+		$persent = 0;
+        if ($luck['joined_times'] > 0) {
+            $_persent = ($luck['joined_times']/$luck['total_times']) * 100;
+            if (0 < $_persent && $_persent < 1) {
+                $persent = 1;
+            } elseif(99 < $_persent && $_persent < 100) {
+                $persent = 99;
+            } else {
+                $persent = round($_persent, 0);
+            }
+        }
+	?>
+	<div style="padding: 0px 30px;">
+		<div class="progress_wrap">
+		<div class="progress_bar"style="width: {$persent}%;">
+			&nbsp;&nbsp;{$persent}%&nbsp;&nbsp;
+		</div>
+	</div>
+	</div>
+
+</div><?php if($luck['luck_sn'] == ''){ ?>
+	<ul class="price_dottm" >
+	  <li style=" text-align:center">已参与{$luck.joined_times}人次</li>
+	  <li>总需{$luck.total_times}人次</li>
+		<?php  $rest = $luck['total_times'] - $luck['joined_times']; ?>
+	  <li style=" text-align:center">剩余{$rest}人次</li>
+	</ul>
+	<!--<ul class="price_dottm">
+	  <li style=" text-align:center">已参与</li>
+	  <li>总需人次</li>
+	  <li style=" text-align:center">剩余</li>
+	</ul>-->
+
+	<div class=""style="text-align: center;">
+			<div class="add_btn" onclick="joinLuck({$luck.luck_id});" >
+				立即参与
+			</div>
+	</div>
+	<?php } ?>
+	<!-------中奖者-------->
+	<?php
+							$nickname = substr_cut($luck['good_luck_nickname']);
+						?>
+	<?php if($luck['luck_sn'] != ''){ ?>
+	<div class=""style="padding: 0px 10px;margin-top: 10px;">
+
+		<div class=""style="border-top: 1px solid gainsboro;font-size: 14px;line-height: 30px;color: red;padding-top: 10px;">
+			获得者：<span >{$nickname}</span>
+			<br />
+	      	抽奖号：<span ><?php echo $luck['luck_sn']; ?></span>
+	      </div>
+	</div>
+	<?php } ?>
+	<div style="padding: 10px 10px;"">
+
+
+	<div class="Wallet">
+		<a href="{:U('/Mobile/luckDraw/history_page',array('luck_id'=>$luck.luck_id,'goods_id'=>$luck[goods_id]))}"><dl class="b"><dt>往期揭晓</dt><dd>&nbsp;</dd></dl></a>
+		<!--<a href="{:U('/Mobile/Luck_draw/join_records',array('luck_id'=>$luck.luck_id))}"><dl class="b"><dt>用户参与记录</dt><dd>&nbsp;</dd></dl></a>-->
+		<a href="{:U('/Mobile/luckDraw/show_luck')}"><dl class="b"><dt>抽奖晒单</dt><dd>&nbsp;</dd></dl></a>
+
+	</div>
+	</div>
+  <h2 style="text-align: center;font-size: 14px;color:red;background:url(__STATIC__/images/title_bg.png)no-repeat;background-size:100% 100%;margin:15px 0px 5px 0px;">————&nbsp;奖品介绍&nbsp;————</h2>
+
+
+  <div class="main" id="user_goods_ka_2"style="display:block;" >
+    <div class="product_main" style=" margin-top:40px;"> <!-- 产品图片 -->
+         <div class="product_images product_desc" id="product_desc"> {$goods.goods_content|htmlspecialchars_decode} </div>
+    </div>
+    <!--<section class="index_floor">
+      <h2 style=" border-bottom:1px solid #ddd "> <span></span> 商品信息 </h2>
+        <ul class="xiangq">
+           <foreach name="goods_attr_list" item="v" key="k" >
+           <li><p>{$goods_attribute[$v[attr_id]]}:</p><span>{$v[attr_value]}</span></li>
+           </foreach>
+           <li><p>上架时间：</p><span>{$goods.on_time|date='Y-m-d H:i',###}</span></li>
+           <li></li>
+        </ul>
+    </section>-->
+  </div>
+
+<script>
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600);
+}
+</script>
+<a href="javascript:goTop();" class="gotop"><img src="__STATIC__/images/topup.png"></a>
+<div style=" height:60px;"></div>
+
+
+
+
+<script>
+	var is_can_click = true;
+	var is_can_join = true;
+	function showMask(points){
+		$(".actionsheet").addClass("actionsheet_toggle");
+		$("#add_luck_num").text(1);
+		$("#my_points").text(points?points:0);
+		points_count(1);
+	}
+	//点击
+	function numbtnClick(num){
+		$("#add_luck_num").text(num);
+		points_count(num);
+	}
+
+	function lowerNum(){
+		var num = $("#add_luck_num").text();
+		if (num==1) {
+			return false;
+		}
+		$("#add_luck_num").text(--num);
+		points_count(num);
+	}
+	function upperNum(){
+		var num = $("#add_luck_num").text();
+
+		$("#add_luck_num").text(++num);
+		points_count(num);
+	}
+	//计算总能量
+	function points_count(num){
+		var count = parseFloat($("#points_price").text())*num;
+		$("#points_count").text(count);
+		if ($("#my_points").text()>=count) {
+			$(".addNow").show();
+			$(".canNot").hide();
+		} else{
+			$(".addNow").hide();
+			$(".canNot").show();
+		}
+
+	}
+
+	// 立即参与
+	function joinLuck(luck_id){
+		if (!is_can_click) {
+			return false;
+		}
+		is_can_click = false;
+		$.ajax({
+        type : "POST",
+        url:"{:U('Mobile/LuckDraw/joinLuck')}",//+tab,
+        data : {luck_id:luck_id},
+        success: function(data){
+					if(data.status < 1){
+						location.href ="{:U('Mobile/User/login')}";
+						return;
+					}
+				load_mask(luck_id);
+
+				showMask(data.user.pay_points);
+				is_can_click = true;
+        		}
+    		});
+	}
+	// 选择参与次数
+	function selLuckTimes(luck_id){
+		if (!is_can_join) {
+			return false;
+		}
+		is_can_join = false;
+		var joined_times = $("#add_luck_num").text();
+		layer.closeAll();
+		layer.load(1, {
+	  	shade: [0.1,'#fff'] //0.1透明度的白色背景
+		});
+		$.ajax({
+        type : "POST",
+        url:"{:U('Mobile/LuckDraw/selLuckTimes')}",
+        data : {luck_id:luck_id,joined_times:joined_times},
+        success: function(data){
+					layer.closeAll();
+					if(data.status < 1){
+						layer.msg(data.msg,{time:2000});
+						window.location.reload();
+						return false;
+					}
+					layer.closeAll();
+					var order_id = data.result.order_id;
+					layer.open({
+				  		type: 1,
+				  		title: false,
+				  		shadeClose: false,
+				  		closeBtn: 0,
+				  		content:'<div class="actionsheet" style="width:250px;">'+
+									'<div class="actionsheet_menu" style="width:250px;">'+
+									'<div class="actionsheet_content" style="text-align: center;height:50px;border-bottom:1px solid #e4e4e4;">参与成功</div>'+
+										'<div class="actionsheet-flex ">'+
+											'<div class="actionsheet-flex__item actionsheet_cancel_btn" onclick=" layer.closeAll();window.location.reload();">继续抽奖</div>'+
+							        '<div class="actionsheet-flex__item actionsheet_confirm_btn"><a href="/Mobile/luckDraw/orderDetail?order_id='+ order_id +';">查看订单</a></div>'+
+							      '</div>'+
+									'</div>'+
+								'</div>'
+				 });
+
+
+         // '/index.php?m=Mobile&c=LuckDraw&a=orderDetail&order_id='+order_id;
+       		is_can_join = true;
+        }
+   		});
+	}
+	//加载弹窗
+	function load_mask(luck_id){
+		layer.open({
+		  		type: 1,
+		  		title: "参与抽奖",
+		  		closeBtn: 1,
+		  		shadeClose: true,
+
+		  		offset: 'b',
+		  		content: '<div class="actionsheet">'+
+							'<div class="actionsheet_menu">'+
+
+								'<div class="actionsheet_content">'+
+									'<div class="actionsheet-media-box_appmsg" >'+
+							            '<div class="actionsheet-media-box__hd goods_img">'+
+							               ' <img id="luckImg" class="weui-media-box__thumb" src="{$goods.goods_id|goods_thum_images=70,70}" alt="">'+
+							            '</div>'+
+							            '<div class="actionsheet-media-box__bd"style="min-width:220px;">'+
+							                '<h4 id="luckGoodsName" class="luck_title">{$luck.goods_name}</h4>'+
+							                '<p id="luckGoodsNumber" class="luckPrices">第{$luck.period}期</p>'+
+							                '<div id="luckGoodsPrice" class="luckPrices">满<span class="jifen"id="points_price">{$luck.pay_integral}</span>能量可参与一次</div>'+
+							           ' </div>'+
+							        '</div>'+
+								'</div>'+
+								'<div class="actionsheet_content">'+
+									'<div class="luck_title">'+
+										'您当前能量为：<span class="jifen"id="my_points">999</span>'+
+									'</div>'+
+									'<div class="actionsheet-flex"style="padding: 10px 0px;" >'+
+							            '<div class="actionsheet-flex__item">'+
+						            			'<div style="padding: 0px 10px;">'+
+								            		'<div class="numbtn" onclick="numbtnClick(5)">'+
+								            			'5次'+
+								            		'</div>'+
+								            '	</div>'+
+							            '</div>'+
+							            '<div class="actionsheet-flex__item">'+
+							            		'<div style="padding: 0px 10px;">'+
+								            		'<div class="numbtn"onclick="numbtnClick(10)" >'+
+								            			'10次'+
+								            		'</div>'+
+								            '	</div>'+
+							           ' </div>'+
+							            '<div class="actionsheet-flex__item">'+
+								            '	<div style="padding: 0px 10px;">'+
+								            		'<div class="numbtn"onclick="numbtnClick(20)" >'+
+								            			'20次'+
+								            		'</div>'+
+								            	'</div>'+
+
+							            '</div>'+
+							        '</div>'+
+							        '<div class="actionsheet-flex ">'+
+							        		 '<div class=" buy_num_box">'+
+						               		 '<div class="buy_num_button">'+
+						                    		'<div class=" buy_num_button_left" href="javascript:;" onclick="lowerNum()">-</div>'+
+						                    		'<span id="add_luck_num" class="buy_num_button_center">1</span>'+
+						                    		'<div class=" buy_num_button_right" href="javascript:;" onclick="upperNum()">+</div>'+
+						                		'</div>'+
+						                 '</div>'+
+
+						               ' <div class="actionsheet-flex__item">'+
+						                   '<span style="font-size: 14px;line-height: 36px;">&nbsp;&nbsp;共计：</span> '+
+						                  ' <span id="points_count" class="jifen">5</span>'+
+						                   '<span style="font-size: 14px;line-height: 36px;">能量</span> '+
+						               ' </div>'+
+						           ' </div>'+
+								'</div>'+
+								'<div class="actionsheet_content">'+
+									'<div class="addNow"onclick="selLuckTimes('+luck_id+')">'+
+										'立即参与'+
+									'</div>'+
+									'<div class="canNot">'+
+										'能量不足'+
+									'</div>'+
+								'</div>'+
+							'</div>'+
+						'</div>'
+
+			});
+	}
+
+</script>
+</body>
+</html>

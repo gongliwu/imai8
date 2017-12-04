@@ -1,0 +1,201 @@
+<include file="public/header"/>
+<style type="text/css">
+	.name label span{color: #333;font-weight: 900;}
+</style>
+<body class="background_white">
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="{:U('User/index')}" title="返回"></a></div>
+            <div class="h-mid">设置密码</div>
+            <div class="h-right">
+                <!--<aside class="top_bar">
+                    <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a
+                            href="javascript:;"></a></div>
+                </aside>-->
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="tbh5v0">
+    <div class="Personal">
+        <div id="tbh5v0">
+           
+            <div class="innercontent1" id="chang_pwd">
+                    
+
+                    <div class="name">
+                        <label for="password"> <span style="color: black;font-weight: 900;">原密码</span>
+                            <input name="old_password" value="" id="password" placeholder="*原密码" type="password"/>
+                        </label>
+                    </div>
+                    <div class="name">
+                        <label for="new_password"> <span>新密码</span>
+                            <input name="new_password" value="" id="new_password" placeholder="*新密码" type="password"/>
+                        </label>
+                    </div>
+                    <div class="name">
+                        <label for="confirm_password"> <span>确认密码</span>
+                            <input name="confirm_password" value="" id="confirm_password" placeholder="*确认密码" type="password"/>
+                        </label>
+                    </div>
+                    <div class="field submit-btn">
+                        <input type="submit" value="确认修改" class="btn_big1"onclick="editPassword()"/>
+            			</div>
+        		</div>
+        		 <div class="innercontent1" id="set_pwd"style="display: none;">
+                    
+
+                    <div class="name">
+                        <label for="new_password"> <span>新密码</span>
+                            <input name="set_password" value="" id="set_password" placeholder="*新密码" type="password"/>
+                        </label>
+                    </div>
+                    <div class="name">
+                        <label for="confirm_password"> <span>确认密码</span>
+                            <input name="confirm_set_password" value="" id="confirm_set_password" placeholder="*确认密码" type="password"/>
+                        </label>
+                    </div>
+                    <div class="field submit-btn">
+                        <input type="submit" value="确认" class="btn_big1"onclick="setPassword()"/>
+            			</div>
+        		</div>
+    </div>
+    <input type="hidden" name="" id="getpwd" value="{$user.password}" onchange=""/>
+	<input type="text" style="display: none;" name="getmsg" id="getmsg" value="{$msg}" />
+
+   
+</div>
+
+<script language="javascript">
+	
+    $(function () {
+
+		if ($("#getpwd").val().length>0) {
+			
+			$("#chang_pwd").show();
+			$("#set_pwd").hide();
+		}
+		else{
+			$("#chang_pwd").hide();
+			$("#set_pwd").show();
+		}
+	
+    })
+
+    var old_password_empty = "请输入您的原密码！";
+    var new_password_empty = "请输入6位以上新密码！";
+    var confirm_password_empty = "请输入6位以上确认密码！";
+    var both_password_error = "您现两次输入的密码不一致！";
+    /* 会员修改密码 */
+    function editPassword() {
+//      var frm = document.forms['formPassword'];
+        var old_password = $('#password').val();
+        var new_password = $('#new_password').val();
+        var confirm_password = $('#confirm_password').val();
+        var msg = '';
+        var reg = null;
+
+        if (old_password.length == 0) {
+            msg += old_password_empty + '\n';
+        }
+
+        if (new_password.length < 6) {
+            msg += new_password_empty + '\n';
+        }
+
+        if (confirm_password.length < 6) {
+            msg += confirm_password_empty + '\n';
+        }
+
+        if (new_password.length > 0 && confirm_password.length > 0) {
+            if (new_password != confirm_password) {
+                msg += both_password_error + '\n';
+            }
+        }
+        if (msg.length > 0) {
+            alert(msg);
+            return false;
+        } else {
+
+        		$.ajax({
+        			type:"post",
+        			url:"{:U('user/password')}",
+        			dataType: 'json',
+        			data:{"old_password":old_password,"new_password":new_password,"confirm_password":confirm_password},
+        			async:false,
+        			success: function(json){
+			      	if (json.msg == "修改成功") {
+			      		layer.msg(json.msg , {time: 1500})
+			      		$("#chang_pwd").show();
+						$("#set_pwd").hide();
+			      	}else{
+			      		alert(json.msg);
+			      	}
+				 },
+				 error:function(xhr, type){
+				       alert("网络错误");
+			    }
+        		});
+
+            return true;
+        }
+    }
+
+    //设置密码
+     function setPassword(){
+
+//      var frm = document.forms['formPassword'];
+        var new_password = $('#set_password').val();
+        var confirm_password = $('#confirm_set_password').val();
+        var msg = '';
+        var reg = null;
+
+        if (new_password.length < 6) {
+            msg += new_password_empty + '\n';
+        }
+
+        if (confirm_password.length < 6) {
+            msg += confirm_password_empty + '\n';
+        }
+
+        if (new_password.length > 0 && confirm_password.length > 0) {
+            if (new_password != confirm_password) {
+                msg += both_password_error + '\n';
+            }
+        }
+        if (msg.length > 0) {
+            alert(msg);
+            return false;
+        } else {
+
+        		$.ajax({
+        			type:"post",
+        			url:"{:U('user/set_password')}",
+        			dataType: 'json',
+        			data:{"new_password":new_password,"confirm_password":confirm_password},
+        			async:false,
+        			success: function(json){
+			      	if (json.ret == 0) {
+			      		layer.msg("设置成功" , {time: 1500});
+			      		window.location.reload();
+			      	}else{
+			      		
+                        layer.msg(json.msg , {time: 1500});
+			      	}
+				 },
+				 error:function(xhr, type){
+				       alert("网络错误");
+			    }
+        		});
+
+            return true;
+        }
+
+     }
+
+</script>
+</body>
+</html>

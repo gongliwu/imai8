@@ -1,0 +1,7 @@
+.idea
+composer.lock
+*.log
+.DS_Store
+runtime
+public/upload/*
+application/database.php

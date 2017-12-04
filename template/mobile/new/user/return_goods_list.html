@@ -1,0 +1,154 @@
+<include file="public/header"/>
+<body>
+<header>
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"><a class="sb-back" href="{:U('Mobile/User/my_order')}" title="返回"></a></div>
+    <div class="h-mid">退换货</div>
+    <div class="h-right">
+      <aside class="top_bar">
+        <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</header>
+<include file="public/menu"/>
+	<ul class="main_thh">
+    <volist name="list" id="item">     
+		<li class="background_white" style="margin-bottom: 10px;">
+			<div class="display_flex padding_10_10_0_10 font_size_14">
+				<div class="fl">
+					订单编号：{$item.order_sn}
+				</div>
+				<div class="flex_1  text_right">
+					<if condition="$item['type'] eq 0">退款</if><if condition="$item['type'] eq 1">换货</if>
+				</div>
+			</div>
+			<div class="">
+				
+			</div>
+			<div class="display_flex padding_10_10">
+				<div class="goods_img">
+					<img src="{$item[goods_id]|goods_thum_images=200,200}"/>
+				</div>
+				<div class="flex_1 padding_left_10">
+					<div class="goods_name">
+						{$goodsList[$item[goods_id]]}
+					</div>
+					<!--<div class="goods_spec">
+						<span class="">
+							能量：{$item['exchange_integral']}
+						</span>
+						<span class="fr">
+							￥{$item['member_goods_price']}
+						</span>
+					</div>-->
+				</div>
+			</div>
+			<div class="display_flex padding_0_10_10_10">
+				<div class="flex_1">
+					<div class="goods_name">
+						申请时间：{$item.addtime|date="Y-m-d",###}
+					</div>
+					<div class="goods_name color_red">
+						 处理状态：<if condition="$item['status'] eq 0">待客服处理</if>
+                    		<if condition="$item['status'] eq 1">客服处理中</if>
+                    		<if condition="$item['status'] eq 2">已完成</if>    
+					</div>
+				</div>
+				<div class="flex_1 text_right">
+					<a class="padding_2_10 text_center" style="display: inline-block;border: 1px solid #D2D2D2;min-width: 80px;border-radius: 10px;margin-top: 12px;" href="{:U('User/return_goods_info',array('id'=>$item[id]))}">查看</a>
+				</div>
+			</div>
+		</li>
+    
+    
+    </volist> 	 
+    <empty name="list">
+        <div id="list_0_0" class="font12">您没有任何售后数据哦！</div>
+    </empty>    
+	</ul>
+<notempty name="list">
+   <a href="javascript:;" class="get_more" style="text-align:center; display:none;">
+		<img src='__STATIC__/images/category/loader.gif' width="12" height="12"> 
+	</a> 
+</notempty>    
+<div style="height: 30px;">
+	
+</div>
+<script>
+var  page = 1;
+var hasMore = true;
+ /*** ajax 提交表单 查询订单列表结果*/  
+ function ajax_sourch_submit()
+ {
+ 	if (hasMore) {
+ 		$(".get_more").show();
+        page += 1;
+		$.ajax({
+			type : "GET",
+			url:"/index.php?m=Mobile&c=User&a=return_goods_list&is_ajax=1&p="+page,//+tab,									
+//			url:"{:U('Mobile/User/return_goods_list',null,'')}/is_ajax/1/p/"+page,//+tab,
+//			data : $('#filter_form').serialize(),// 你的formid 搜索表单 序列化提交
+			success: function(data)
+			{
+				if($.trim(data) == '')
+				{
+					hasMore = false;
+				}else{
+					$(".main_thh").append(data);
+				}
+				    
+				    
+				$('.get_more').hide();
+			}
+		}); 
+	}
+ } 
+ 
+ //滑动处理
+var mybody = document.getElementsByTagName('body')[0];
+var startX, startY, moveEndX, moveEndY, X, Y;   
+mybody.addEventListener('touchstart', function(e) {
+	startX = e.touches[0].pageX;
+	startY = e.touches[0].pageY;
+});
+mybody.addEventListener('touchmove', function(event) {
+	if (!$(".md-mask").hasClass("md-show-mask")){
+		moveEndX = event.changedTouches[0].pageX;
+		moveEndY = event.changedTouches[0].pageY;
+		X = moveEndX - startX;
+		Y = moveEndY - startY;
+		if ( Y < - 60) {
+			if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+				ajax_sourch_submit();
+			}
+		}
+	}else{
+		if (event.cancelable) {
+        	// 判断默认行为是否已经被禁用
+	        if (!event.defaultPrevented) {
+	           event.preventDefault();
+	        }
+	    }
+		
+	}
+},false);
+mybody.addEventListener('touchend', function(e) {
+	if (!$(".md-mask").hasClass("md-show-mask")){
+		moveEndX = e.changedTouches[0].pageX;
+		moveEndY = e.changedTouches[0].pageY;
+		X = moveEndX - startX;
+		Y = moveEndY - startY;
+		if ( Y < - 60) {
+			if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+				ajax_sourch_submit();
+			}
+		}
+	}
+});
+</script>
+    
+</body>
+</html>

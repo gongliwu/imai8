@@ -1,0 +1,271 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>商品-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/index.css"/>
+ <link rel="stylesheet" type="text/css" href="__STATIC__/css/catalog.css?v=201708"/> 
+ <link rel="stylesheet" type="text/css" href="__STATIC__/css/category_list.css"/>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/global.js"></script>
+
+</head>
+<style type="text/css">
+	
+	.search_header{padding-right: 80px;}
+	
+	#screened{display: none;}
+	.user_btn{
+		color:#666;
+		position: fixed;
+		right: 42px;
+		top: 7px;
+		font-size: 16px;
+		width: 30px;
+		height: 32px;
+		background-position: -9px -85px;
+	}
+	.vf_1.ff{
+		color:#666;
+		position: fixed;
+		right: 8px;
+		top: 7px;
+		font-size: 16px;
+		width: 30px;
+		height: 32px;
+		background-position: 2px 5px;
+		transform:scale(1.2);
+		-webkit-transform:scale(1.2); 
+		-moz-transform:scale(1.2);
+		-o-transform:scale(1.2);    
+		-ms-transform:scale(1.2);
+	}
+	.container{margin-top: 52px;}
+</style>
+<body>
+ <header id="head_search_box" class="_pre" style="position: fixed; top: 0px; width: 100%;">
+		<div class="search_header">
+		    <a href="javascript:history.back(-1)" class="back search_back"></a>
+		    <div class="search">
+		     <form name="sourch_form" id="sourch_form2" method="post" action="{:U("Goods/search")}">
+		   		<div class="text_box" name="list_search_text_box" onClick="return 1;">
+			        <input type="text" class="text" name="q" id="keyword" value="<?php echo I('q'); ?>"  placeholder="搜索关键字"/>
+		   		</div>
+		        <input type="button" value="" class="submit"  onclick="if($.trim($('#keyword').val()) != '') $('#sourch_form2').submit();" />
+		 	</form>
+		    </div>
+		    <a href="/index.php/mobile/Cart/cart.html" class="user_btn"><em class="global-nav__nav-shop-cart-num" id="cart_quantitytop" style="top: 0px; display: inline;"></em></a>
+		    <a href="/index.php/mobile/Index/index.html" class="vf_1 ff"></a>
+		   
+		</div>
+	</header>
+
+<!--分类切换-->
+ <div class="container _pre">
+  <div class="category-box">
+
+    <div class="category1" style="outline: none;" tabindex="5000">
+      <ul class="clearfix" style="">
+      <assign name="m" value="0"/>
+	    <foreach name="goods_category_tree" item="vo" key="k">
+           <if condition="$vo[level] eq 1">
+               <li <if condition="$m eq 0">class='cur' style='margin-top:46px'</if> data-id="{$m++}">{$vo['mobile_name']|getSubstr=0,12}</li>
+            </if>
+        </foreach>
+      </ul>
+    </div>
+
+    <div class="category2" style=" outline: none;" tabindex="5001">
+    <assign name="j" value="0"/>
+        <foreach name="goods_category_tree" key="kk" item="vo">
+          <dl style="margin-top:46px;padding-bottom:50px;<if condition='$j eq 0'>display:block;<else/>display:none;</if>" data-id="{$j++}">
+<!--
+            <span>
+              <adv  limit="1" item="v" pid="400">
+                <a href="{$v.ad_link}" <if condition="$v['target'] eq 1">target="_blank"</if> >
+                <em>全部>></em>
+                    <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
+                </a>
+               </adv>
+            </span>-->
+
+            <foreach name="vo.tmenu" item="v2" key="k2">
+                <dt><a href="{:U('Mobile/Goods/goodsList',array('id'=>$v2[id]))}" >{$v2['name']}</a></dt>
+                <dd>
+                    <div class="fenimg" style="">
+                        <foreach name="v2.sub_menu" item="v3">
+                            <a class="fen"href="{:U('Mobile/Goods/goodsList',array('id'=>$v3[id]))}" style="background: #FFFFFF;text-align: center;padding: 10px;display: block;">
+                            		<div class="fen_wrap" style="overflow: hidden;">
+                            			<img class="fen_img" src="{$v3['image']}" />
+                            		</div>
+                                <div style="border: none;font-size: 12px;line-height: 18px;margin-top: 4px;text-overflow:ellipsis;overflow:hidden;" >{$v3['name']}</div>
+                            </a>
+                        
+                        </foreach>
+                    </div>
+                </dd>
+            </foreach>
+          </dl>
+       </foreach>
+    </div>
+
+  </div>
+</div> 
+
+<section id="mix_search_div" style="display: none;">
+	<header class="con floatsearch">
+	   <section class="mix_new_header">
+	        <a href="javascript:void(0)" class="mix_back"></a>
+	          <form class="set_ip"name="sourch_form" id="sourch_form" method="post" action="{:U('Goods/search')}">
+	            <div class="search">
+	                <div class="text_box">
+	                 <input class="keyword text" name="q" id="q"  placeholder="请输入关键词"  type="text" value="<?php echo I('q'); ?>" />
+	                </div>
+	                <span class="mix_submit" onClick="if($.trim($('#q').val()) != '') $('#sourch_form').submit();"></span>
+	                <a href="javascript:void(0)" class="clear_input" id="clear_input" style="display: block;"></a>
+	            </div>
+	               <input type="button" onClick="if($.trim($('#q').val()) != '') $('#sourch_form').submit(); else alert('输入搜索词');" value="搜索" class="mix_filtrate">
+	        </form>
+	    </section>
+	    <section class="mix_search_list"></section>
+	    <section class="mix_recently_search"><h3>热门搜索</h3>
+	     <ul>
+	            <foreach name="tpshop_config.hot_keywords" item="wd" key="k">
+	               <li><a href="{:U('Goods/search',array('q'=>$wd))}" <if condition="$k eq 0">class="ht"</if>>{$wd}</a></li>
+	            </foreach>
+	      </ul>
+	     </section>
+	    <div class="spacer"></div>
+	</header>
+</section>
+<!---切换js----->
+<include file="public/footer_nav"/>
+ <script>
+
+$(function () {
+    //滚动条
+    $(".category1,.category2").niceScroll({ cursorwidth: 0,cursorborder:0 });
+    var w = ($(".fenimg").width()/3)-21;
+//  if ((w/3)<80) {
+//  		w = w/2-22;
+//  }else{
+//  		w = w/3-22;
+//  }
+	$(".fen").width(w).height(w+30);
+	$(".fen_wrap").width(w).height(w);
+	$(".fen_img").width(w);
+    //图片延迟加载
+ 	//$(".lazyload").scrollLoading({ container: $(".category2") });
+    //$('.category-box').height($(window).height());
+	
+	
+	
+	
+	
+    //点击切换2 3级分类
+	var array=new Array();
+	$('.category1 li').each(function(){
+		array.push($(this).position().top-0);
+	});
+
+	$('.category1 li').click(function() {
+		var index=$(this).index();
+		$('.category1').delay(200).animate({scrollTop:array[index]},300);
+		$(this).addClass('cur').siblings().removeClass();
+		$('.category2 dl').eq(index).show().siblings().hide();
+        $('.category2').scrollTop(0);
+	});
+
+
+
+
+	 var sbox = $("#head_search_box"),
+                sort = $('#product_sort'),
+                g_list = $("#goods_list"),
+                g_m1 = "0", g_m2 = "96px";
+        var m = {
+            input: $("#keyword"),
+            rawAll: '',
+            dd: $(".text_box"),
+            cancel: $(".mix_back"),
+            rawKey: '请输入商品名称 货号',
+            main: function () {
+                this.init();
+                this.be();
+            },
+            init: function () {
+                this.rawAll = this.input.val();
+            },
+            be: function () {
+                var _this = this;
+                this.input.focus(function () {
+                    var mix_search = $("#mix_search_div");
+                    if (mix_search.length > 0) {
+                        $("._pre").hide();
+                        mix_search.show();
+                        $("#keyword1").focus();
+                        return;
+                    }
+                    var newKey = _this.input.val();
+                    if (newKey != _this.rawKey && newKey != _this.rawAll) {
+                        $(this).val(newKey);
+                    } else {
+                        $(this).val(_this.rawKey);
+                    }
+                    if ($(window).scrollTop() > 0) {
+                        window.scrollTo(0, 0);
+                        _this.dd.trigger("click");  //for ddclick
+                    }
+                })
+				.blur(function () {
+                            var newKey = _this.input.val();
+                            if (newKey === _this.rawKey) {
+                                $(this).val(_this.rawAll);
+                            } else {
+                                $(this).val(newKey);
+                            }
+                        });
+                this.cancel.bind("click", function () {
+                    $("#mix_search_div").hide();
+                    $("._pre").show();
+                });
+				document.getElementById("clear_input").onclick = function() {
+		            $("#mix_search_div").hide();
+                    $("._pre").show();
+				}
+            }
+        };
+        m.main();
+
+});
+
+
+function checkSearchForm()
+{
+    if(document.getElementById('keywords').value)
+    {
+	//var frm  = document.getElementById('searchForm');
+	//var type = parseInt(document.getElementById('searchtype').value);
+	//frm.action = type==0 ? 'search.php' : 'stores.php';
+        return true;
+    }
+    else
+    {
+		alert("请输入关键词！");
+        return false;
+    }
+}
+
+function selectPage(sel)
+{
+  sel.form.submit();
+}
+</script> 
+ <script src="__STATIC__/js/jquery.nicescroll.min.js"></script> 
+</body>
+</html>

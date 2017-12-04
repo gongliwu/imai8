@@ -1,0 +1,168 @@
+<include file="public/header"/>
+<style type="text/css">
+	.name label span{color: #333;font-weight: 900;}
+	.name input.zphone{
+		display: block;
+    width: 35%;
+    float: right;
+    border: 0px;
+    height: 35px;
+    background: #f12b2b;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 8px;
+		padding: 0px;
+		color: #ffffff;
+    border-radius: 0;
+	}
+</style>
+<body class="background_white">
+<header>
+    <div class="tab_nav">
+        <div class="header">
+						<?php
+							$before_binging_url = session('before_binging_url');
+							$url = U('User/index');
+							if(!empty($before_binging_url)){
+								$url = $before_binging_url;
+							}
+						?>
+            <div class="h-left"><a class="sb-back" href="{$url}" title="返回" onclick="toBack()"></a></div>
+            <div class="h-mid">绑定手机</div>
+            <div class="h-right">
+
+            </div>
+        </div>
+    </div>
+</header>
+<div id="tbh5v0">
+    <div class="Personal">
+        <div id="tbh5v0">
+            <div class="innercontent1">
+
+                <form method="post" action="" id="edit_mobile" onSubmit="return checkMobileForm()">
+
+                    <div class="name">
+                        <label for="email_ep"> <span>手机</span>
+                            <input name="mobile" value="" id="mobile_ep" placeholder="请输入手机号码" type="text"/>
+                        </label>
+                    </div>
+                    <div class="name">
+                        <label for="email_ep"> <span>验证码</span>
+                            <input type="text" id="mobile_code"  name="mobile_code" placeholder="请输入短信验证码" />
+                            <input id="zphone" type="button" class="zphone" rel="mobile" value="获取短信验证码 " onClick="sendcode(this)"  class="zphone">
+                        </label>
+                    </div>
+
+                </form>
+                <div class="field submit-btn">
+                    <input type="submit" value="确认" id="chang_mobile"onclick="sub()" class="btn_big1"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="javascript">
+	$('body').hide();
+	function is_show_mobile_bindding(){
+		$.post("{:U('Mobile/User/is_show_mobile_bindding?url_page='.$url_page)}",function(data){
+			if(parseInt(data) > 1){
+				 window.location.href = "{:U('/Mobile/Index')}";
+				 return;
+			}
+			$('body').show();
+		});
+	}
+	is_show_mobile_bindding();
+	function sub(){
+		$.ajax({
+        url: "{:U('user/mobileBinding')}",
+        type: 'post',
+        dataType: 'json',
+        data: $("#edit_mobile").serialize(),
+        success: function (res) {
+            if (res.ret == 0) {
+                mobile_flag = true;
+                layer.msg(res.msg, {time: 1500});
+								window.location.href = "{:U('user/index')}";
+            } else {
+                mobile_flag = false;
+                layer.msg(res.msg, {time: 2000});
+            }
+        }
+    });
+	}
+    function checkMobileForm() {
+        var mobile = $('#mobile_ep').val();
+        var mobile_code = $('#mobile_code').val();
+        if (!checkMobile(mobile)) {
+
+            layer.msg("手机格式不正确", {time: 2000});
+            return false;
+        }
+        if (mobile_code == '') {
+            layer.msg("请填写手机验证码", {time: 2000});
+            return false;
+        }
+        if (!mobile_flag) {
+            layer.msg("请先获取手机验证码", {time: 2000});
+            return false;
+        }
+        return true;
+    }
+
+
+    var mobile_flag = false;
+    //发送验证码
+    function sendcode(o) {
+        var mobile = $('#mobile_ep').val();
+        if (!checkMobile(mobile)) {
+            alert("手机格式不正确");
+        } else {
+            $.ajax({
+                url: '/index.php?m=Home&c=Api&a=send_validate_code&scene=6&t=' + Math.random(),
+                type: 'post',
+                dataType: 'json',
+                data: {type: $(o).attr('rel'), send: $.trim($('#mobile_ep').val()), scene:6},
+                success: function (res) {
+
+                    if (res.status == 1) {
+                        mobile_flag = true;
+                        layer.msg(res.msg, {time: 1500});
+                        countdown(o);
+                    } else {
+                        mobile_flag = false;
+                        layer.msg(res.msg, {time: 2000});
+                    }
+                }
+            });
+        }
+    }
+
+    var wait = 60;
+    function countdown(obj, msg) {
+        obj = $(obj);
+        if (wait == 0) {
+            obj.removeAttr("disabled");
+            obj.val(msg);
+            wait = 60;
+        } else {
+            if (msg == undefined || msg == null) {
+                msg = obj.val();
+            }
+            obj.attr("disabled", "disabled");
+            obj.val(wait + "秒后重新获取");
+            wait--;
+            setTimeout(function () {
+                countdown(obj, msg)
+            }, 1000)
+        }
+    }
+
+		function toBack() {
+			$.post("{:U('Mobile/User/remove_before_binging_url')}");
+		}
+</script>
+
+</body>
+</html>

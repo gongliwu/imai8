@@ -1,0 +1,154 @@
+
+<include file="public/header"/>
+<body style="background: #f3f4f5;">
+<style type="text/css">
+	a:hover{font-size: 13px;}
+	.orange_sq{color: #F23030;}
+	.ques_sq .textarea_sq textarea{
+			min-height: 20px;
+			height:100%; 
+			height: auto;
+			max-height: 200px;
+			overflow-y:visible ;
+			border: none;
+		}
+	.submit_sq{padding: 10px 10px;}
+	.submit_sq a{border-radius: 5px;}
+	.layermcont,.actionsheet_content,.actionsheet_menu,.actionsheet,.layermchild.layermanim{border-radius: 5px;}
+</style>
+<header>
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"><a class="sb-back" href="{:U('User/return_goods_list')}" title="返回"></a></div>
+    <div class="h-mid">售后信息</div>
+    <div class="h-right">
+      <aside class="top_bar">
+        <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</header>
+<include file="public/menu"/>
+		
+		<div class="order_list">
+          <h2 style="border: none;">
+              <a href="javascript:void(0);">
+                  <img src="__STATIC__/images/dianpu.png"><span>订单号:{$return_goods[order_sn]}</span>
+                  <strong><if condition="$list[order_status] eq 5"><b>已作废</b></if>
+                  <span style="float: right;color: #f23030;">
+                  	<if condition="$return_goods[status] eq 0"><img width="15"height="15"style="vertical-align: middle;margin-top: -4px;" src="__STATIC__/images/wait_apply.png"/>&nbsp;待处理</if>
+                          <if condition="$return_goods[status] eq 1"><img width="15"height="15"style="vertical-align: middle;margin-top: -4px;" src="__STATIC__/images/wait_apply.png"/>&nbsp;客服处理中</if>
+                          <if condition="$return_goods[status] eq 2"><img width="15"height="15"style="vertical-align: middle;margin-top: -4px;" src="__STATIC__/images/apply_success.png"/>&nbsp;已完成</if>  
+                  </span>
+              </a>
+          </h2>
+         	<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$goods['goods_id']))}">
+					<div class="order_list order_list_new_bg"style="background: #FFFFFF !important;" >
+				          <dl style="background: #FFFFFF!important;border: none;">
+				          <dt>
+				          	<img src="{$goods[goods_id]|goods_thum_images=400,400}">
+
+				          </dt>
+				          <dd class="name" class="pice" style=" width:50%;height: 100% ;">
+			                  <strong style="overflow: hidden;display: block;max-height: 80%;text-overflow: ellipsis;margin-top: 5px;">{$goods.goods_name}</strong>
+			                  <span style="color: #666;overflow: hidden;display: block;max-height: 20%;text-overflow: ellipsis;margin-top: 5px;">{$goods.spec_key_name}</span>
+		                   </dd>
+		                   <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">能量：{$goods['exchange_integral']}</dd>
+				          <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;margin-top: 10px;">￥{$goods['shop_price']}</dd>
+				          <!--<dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+
+		                  	<em>
+		                  		x{$return_goods['goods_num']}
+		                    </em>
+		                  </dd>-->
+				          </dl>
+				    </div>
+          	</a>
+       </div>
+      
+		
+		<!--<div class="order_list">
+			<div class=""style="padding: 10px 10px 0px 10px;">
+				<div style="background: #FFFFFF;border-radius: 5px;">
+					<div id="apply_res" style="padding:0px 10px ;font-size: 13px;vertical-align: middle;">
+						 
+						
+					</div>
+	           </div>
+			</div>
+			<div class=""style="padding: 0px 10px;">
+				<div style="background: #FFFFFF;border-radius: 5px;">
+					<div id="apply_res"style="padding:0px 10px ;font-size: 13px;">
+						金额：{$order.order_amount}元+{$order.integral_money}能量
+					</div>
+	           </div>
+			</div>
+		</div>-->
+		<div class="order_list">
+          <h2 >
+              
+                  <span style="color: #333;">买家申请<if condition="$data['type'] eq 0">退款</if><if condition="$data['type'] eq 1">换货</if>售后服务</span>
+                  <span style="float: right;color: #999;">{:date('Y-m-d h:m:s')}</span>
+            
+          </h2>
+         <!--<div style="font-size: 13px;padding: 0px 10px;display: flex;">
+       	 	<div style="flex: 1;color: #999;width: 60px;">
+       	 		申请原因
+       	 	</div>
+       	 	<div class="fr_w">
+       	 		{$return_reason}
+       	 	</div>
+       	 	<div style="clear: both;"></div>
+       	</div>-->
+      	<!--<div style="font-size: 13px;padding: 10px 10px 0px 10px;">
+       	 	<div style="float: left;color: #999;width: 60px;line-height: 16px;">
+       	 		申请数量
+       	 	</div>
+       	 	<div class="fr_w" style="float:right;color: #333;max-height: 32px;line-height: 16px;word-break:break-all; text-overflow:ellipsis;overflow:hidden;">
+       	 		
+       	 	</div>
+       	 		<div style="clear: both;"></div>
+       	</div>-->
+		<div style="font-size: 13px;padding: 10px 10px 0px 10px;">
+       	 	<div style="float: left;color: #999;width: 60px;line-height: 16px;">
+       	 		申请说明
+       	 	</div>
+       	 	<div class="fr_w" style="float:right;color: #333;max-height: 32px;line-height: 16px;word-break:break-all; text-overflow:ellipsis;overflow:hidden;">
+       	 		{$return_goods['reason']}
+       	 	</div>
+       	 		<div style="clear: both;"></div>
+       	</div>
+		<div style="font-size: 13px;padding: 10px 10px;">
+       	 	<div style="color: #999;">
+       	 		申请凭证
+       	 	</div>
+       	 	<div style="">
+			   <volist name="return_goods[imgs]" id="item">  
+		            <a style="display: inline-block;" href="{$item}" target="_blank"><img width="90"height="90" src="{$item}"/></a>&nbsp;&nbsp;&nbsp;
+	            </volist>   
+       	 	</div>
+       	</div>
+       
+	 </div>
+	<if condition="$return_goods[status] neq 2">
+		<!--<div class="submit_sq" >
+	        <a href="javascript:void(0)" onClick="submit_form();" name="btnSubmit"><s></s>撤销申请</a>
+		</div>-->
+	</if>
+	</div>
+   
+ 
+<script type="text/javascript">
+
+  function submit_form()
+  {
+
+  } 
+
+$(function(){
+	$(".fr_w").width($(window).width()-80);
+})
+</script>
+</body>
+</html>

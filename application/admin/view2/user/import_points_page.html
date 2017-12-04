@@ -1,0 +1,179 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+            <div class="subject">
+                <h3>导入积分</h3>
+                <h5>网站系统导入用户积分文件</h5>
+            </div>
+        </div>
+    </div>
+    <form class="form-horizontal" method="post" id="add_form" enctype="multipart/form-data">
+        <div class="ncap-form-default">
+            <dl class="row">
+                <dt class="tit">
+                    <label for="points_file"><em>*</em>导入文件</label>
+                </dt>
+                <dd class="opt">
+                    <input type="file" name="points_file" id="points_file" class="input-txt">
+                    <span class="err"></span>
+                    <p class="notic">支持Excel格式</p>
+                </dd>
+            </dl>
+            <div class="bot">
+                <a href="JavaScript:void(0);" onclick="checkUpload();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a>
+            </div>
+        </div>
+    </form>
+    <?php if ( $data ) { ?>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>导入记录</h3>
+                <h5>(共<span id="user_count"><?php echo count($data); ?></span>条记录)</h5>
+            </div>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <!--
+                        <th class="sign" axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="user_id" axis="col3" class="">
+                            <div style="text-align: center; width: 40px;" class="">ID</div>
+                        </th>
+                        -->
+
+                        <?php if ( count($error) > 0 ) { ?>
+                            <th align="left" abbr="name" axis="col4" class="">
+                                <div style="text-align: center; width: 150px;" class="">被保险人</div>
+                            </th>
+                            <th align="left" abbr="mobile" axis="col4" class="">
+                                <div style="text-align: center; width: 150px;" class="">手机号码</div>
+                            </th>
+                            <th align="left" abbr="plate_number" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">车牌</div>
+                            </th>
+                            <th align="left" abbr="premium" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">保费</div>
+                            </th>
+                            <th align="left" abbr="points" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">积分</div>
+                            </th>
+                            <th align="left" abbr="error" axis="col5" class="">
+                                <div style="text-align: center; width: 300px;" class="">错误信息(*导入失败, 未导入文件任何数据到数据库)</div>
+                            </th>
+                        <?php } else { ?>
+                            <th align="left" abbr="name" axis="col4" class="">
+                                <div style="text-align: center; width: 150px;" class="">被保险人</div>
+                            </th>
+                            <th align="left" abbr="mobile" axis="col4" class="">
+                                <div style="text-align: center; width: 150px;" class="">手机号码</div>
+                            </th>
+                            <th align="left" abbr="plate_number" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">车牌</div>
+                            </th>
+                            <th align="left" abbr="premium" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">保费</div>
+                            </th>
+                            <th align="left" abbr="points" axis="col5" class="">
+                                <div style="text-align: center; width: 150px;" class="">积分</div>
+                            </th>
+                            <th align="left" abbr="uid" axis="col6" class="">
+                                <div style="text-align: center; width: 150px;" class="">已导入用户ID</div>
+                            </th>
+                        <?php } ?>
+
+                        <!--
+                        <th align="center" axis="col1" class="handle">
+                            <div style="text-align: center; width: 150px;">操作</div>
+                        </th>
+                        -->
+                        <th style="width:100%" axis="col7">
+                            <div></div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="bDiv" style="height: auto;" id="ajax_return">
+            <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+                <table>
+                    <tbody>
+                        <?php if ( count($error) > 0 ) { ?>
+                            <?php foreach($error as $row) { ?>
+                            <tr>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['name']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['mobile']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['plate_number']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['premium']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['points']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 300px;"><?php echo $row['msg']; ?></div></td>
+
+                                <td class="" style="width: 100%;" align=""></td>
+                            </tr>
+                            <?php } ?>
+                            <tr>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 300px;">end</div></td>
+
+                                <td class="" style="width: 100%;" align=""></td>
+                            </tr>
+                        <?php } else { ?>
+                            <?php foreach($data as $row) { ?>
+                            <tr>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['name']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['mobile']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['plate_number']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['premium']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['points']; ?></div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;"><?php echo $row['user_id']; ?></div></td>
+
+                                <td class="" style="width: 100%;" align=""></td>
+                            </tr>
+                            <?php } ?>
+                            <tr>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+                                <td align="left" class=""><div style="text-align: center; width: 150px;">end</div></td>
+
+                                <td class="" style="width: 100%;" align=""></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+</div>
+<script type="text/javascript">
+    function checkUpload(){
+        var error ='';
+
+        if ( error )
+        {
+            layer.alert(error, {icon: 2});  //alert(error);
+            return false;
+        }
+
+        $('#add_form').submit();
+    }
+</script>
+</body>
+</html>

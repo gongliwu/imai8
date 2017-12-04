@@ -1,0 +1,19 @@
+<foreach name="favourite_goods" item="v" key="k">
+
+ 	<li>
+        <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}" title="{$v.goods_name}">
+           <div class="index_pro">
+      	       <div class="products_kuang"><img src="{$v.goods_id|goods_thum_images=400,400}"></div>
+      	       <div class="goods_name">{$v.goods_name}</div>
+      	       <div class="integral">
+					<img src="__STATIC__/images/integral_icon.png" alt="">
+					<span >能量:{$v.exchange_integral}</span>
+      	      </div>
+				<div class="integral">
+                  	<i >￥{$v.shop_price}</i>
+      	       </div>
+
+            </div>
+        </a>
+   </li>
+</foreach>

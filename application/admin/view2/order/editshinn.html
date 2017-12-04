@@ -1,0 +1,125 @@
+<include file="public/layout" />
+
+<style type="text/css">
+html, body {
+	overflow: visible;
+}
+</style>
+<body style="background-color: #FFF; overflow: auto;">
+<div id="toolTipLayer" style="position: absolute; z-index: 9999; display: none; visibility: visible; left: 95px; top: 573px;"></div>
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="订单价格修改"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>修改物流信息</h3>
+        <h5>修改物流单号或配送方式</h5>
+      </div>
+    </div>
+  </div>
+  <form action="{:U('Admin/Order/editshinn',array('order_id'=>$order['order_id']))}" method="post"  name="priceForm">
+    <div class="ncap-form-default">
+
+      <dl class="row">
+        <dt class="tit">
+          <label for="shipping_price">配送方式</label>
+        </dt>
+        <dd class="opt">
+					<select name="shipping">
+             <volist name="shipping_list" id="item">
+                 <option <if condition="$order[shipping_code] eq $item[code]">selected</if> value="{$item.code}" >{$item.name}</option>
+             </volist>
+         </select>
+        </dd>
+      </dl>
+
+      <dl class="row">
+        <dt class="tit">
+          <label for="discount">物流单号</label>
+        </dt>
+        <dd class="opt">
+         <input name="invoice_no" id="invoice_no"   type="text" class="input-txt" value="{$delivery_doc.invoice_no}"   >
+
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>收货人</label>
+        </dt>
+        <dd class="opt">
+          {$order.consignee}
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>联系方式</label>
+        </dt>
+        <dd class="opt">
+          {$order.mobile}
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>收货地址</label>
+        </dt>
+        <dd class="opt">
+          {$order.address2}
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label>邮编</label>
+        </dt>
+        <dd class="opt">
+          {$order.zipcode}
+        </dd>
+      </dl>
+      <div class="bot">
+      		<a href="JavaScript:void(0);" onclick="document.priceForm.submit()" class="ncap-btn-big ncap-btn-green" >保存</a>
+      		<a href="JavaScript:void(0);" onClick="javascript:history.go(-1)" class="ncap-btn-big ncap-btn-mini">取消</a>
+      	</div>
+    </div>
+		<input type="hidden" name="order_id" value="{$order.order_id}">
+  </form>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	$("#handlepost").validate({
+		debug: true, //调试模式取消submit的默认提交功能
+		focusInvalid: false, //当为false时，验证无效时，没有焦点响应
+        onkeyup: false,
+        submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+            form.submit();   //提交表单
+        },
+        ignore:":button",	//不验证的元素
+        rules:{
+        	keyword:{
+        		required:true
+        	},
+        	text:{
+        		required:true
+        	}
+        },
+        messages:{
+        	keyword:{
+        		required:"请输入关键词"
+        	},
+        	text:{
+        		required:"请填写回复内容"
+        	}
+        }
+	});
+
+
+});
+
+function formSubmit(){
+	$("#handlepost").submit();
+}
+
+</script>
+</body>
+</html>

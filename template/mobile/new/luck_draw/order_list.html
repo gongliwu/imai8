@@ -1,0 +1,207 @@
+<include file="public/header"/>
+<style type="text/css">
+	/*为了不跟user.css冲突*/
+	.order_list h2{
+		border-bottom: none;
+	}
+	.Evaluation2 ul li{width: 25%;}
+</style>
+<body style="background: #f3f4f5;">
+<header>
+<div class="tab_nav">
+   <div class="header">
+     <div class="h-left"><a class="sb-back" href="{:U('Mobile/User/my_order')}" title="返回"></a></div>
+     <div class="h-mid">抽奖订单</div>
+     <div class="h-right">
+       <aside class="top_bar">
+         <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+       </aside>
+     </div>
+   </div>
+ </div>
+</header>
+<include file="public/menu"/>
+
+<div id="tbh5v0">
+<!--------筛选 form 表单 开始-------------->
+<form action="{:U('Mobile/luckDraw/ajax_order_list')}" name="filter_form" id="filter_form">
+      <div class="Evaluation2">
+            <ul>
+              <li><a href="{:U('/Mobile/luckDraw/order_list')}" class="tab_head <if condition="$Request.param.type eq ''">on</if>"  >全部</a></li>
+              <li><a href="{:U('/Mobile/luckDraw/order_list',array('type'=>'WAITSEND'))}"     class="tab_head <if condition="$Request.param.type eq 'WAITSEND'">on</if>">待发货</a></li>
+              <li><a href="{:U('/Mobile/luckDraw/order_list',array('type'=>'WAITRECEIVE'))}"  class="tab_head <if condition="$Request.param.type eq 'WAITRECEIVE'">on</if>">待收货</a></li>
+              <li><a href="{:U('/Mobile/luckDraw/order_list',array('type'=>'WAITCCOMMENT'))}" class="tab_head <if condition="$Request.param.type eq 'WAITCCOMMENT'">on</if>">待评价</a></li>
+            </ul>
+      </div>
+
+	<div class="order ajax_return">
+	   <volist name="lists" id="list">
+       <div class="order_list">
+          <h2>
+              <a href="javascript:void(0);">
+                  <img src="__STATIC__/images/dianpu.png"><span>订单号:{$list.order_sn}</span>
+                  <span style="float: right;color: #f23030;">
+										<?php $v = set_btn_order_status($list);?>
+										{$v.order_status_desc}
+									</span>
+              </a>
+          </h2>
+         	<a href="{:U('/Mobile/luckDraw/orderDetail',array('order_id'=>$list['order_id']))}">
+
+	      <volist name="list.goods_list" id="good">
+			<div class="order_list order_list_new_bg" >
+		          <dl >
+		          <dt>
+		          	<img src="{$good.goods_id|goods_thum_images=200,200}">
+
+		          </dt>
+		          <dd class="name" class="pice" style=" width:50%;height: 100%;">
+	                  <strong style="overflow: hidden;display: block;max-height: 80%;text-overflow: ellipsis;margin-top: 5px;">
+											{$good.goods_name}
+										</strong>
+                   </dd>
+		          <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">
+								{$good['luck_pay_integral']}积分一次
+							</dd>
+		          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+
+                  	<em>
+                  		x{$good['luck_joined_times']}
+                    </em>
+                  </dd>
+		          </dl>
+		    </div>
+		</volist>
+          	</a>
+          <div class="pic"><span>实付：</span><strong>{$list['total_integral']}积分</strong></div>
+          <div class="anniu" style="width:95%;height: auto;">
+            <if condition="$list.receive_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('Mobile/User/order_confirm',array('id'=>$list['order_id']))}">确认收货</a></if>
+            <if condition="$list.comment_btn eq 1"><a  style="margin-left: 10px;margin-bottom: 10px;"href="{:U('/Mobile/User/add_comment',array('rec_id'=>$list['goods_list'][0]['rec_id'],'ttype'=>2))}">评价</a></if>
+            <if condition="$list.shipping_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('User/express',array('order_id'=>$list['order_id']))}">查看物流</a></if>
+          </div>
+       </div>
+		</volist>
+    </div>
+  <!--查询条件-->
+  <input type="hidden" name="type" value="{$Request.param.type}" />
+</form>
+
+<empty name="lists">
+	<div style="text-align: center;margin-top: 50px;">
+		暂无订单
+	</div>
+</empty>
+<notempty name="lists">
+   <a href="javascript:;" class="get_more" style="text-align:center; display:none;">
+		<img src='__STATIC__/images/category/loader.gif' width="12" height="12"> 
+	</a>
+</notempty>
+</div>
+
+
+<script language="javascript">
+var  page = 1;
+var hasMore = true;
+ /*** ajax 提交表单 查询订单列表结果*/
+ function ajax_sourch_submit()
+ {	
+ 	if (hasMore) {
+ 		page += 1;
+ 		$('.get_more').show();
+		$.ajax({
+			type : "GET",
+			url:"/index.php?m=Mobile&c=LuckDraw&a=order_list&type={$Request.param.type}&is_ajax=1&p="+page,//+tab,
+//			url:"{:U('Mobile/User/order_list',array('type'=>$_GET['type']),'')}/is_ajax/1/p/"+page,//+tab,
+			//data : $('#filter_form').serialize(),
+			success: function(data)
+			{
+				if($.trim(data)  == '')
+				{	
+					hasMore = false;
+					$('.get_more').hide();
+				}else
+				{
+					
+					$(".ajax_return").append(data);
+					$(".m_loading").hide();
+					$('.get_more').hide();
+				}
+			}
+		});
+	}
+ }
+
+//取消订单
+function cancel_order(id){
+	if(!confirm("确定取消订单?"))
+		return false;
+	location.href = "/index.php?m=Mobile&c=User&a=cancel_order&id="+id;
+}
+//上拉加载更多
+var mybody = document.getElementsByTagName('body')[0];
+    //滑动处理
+
+    var startX, startY, moveEndX, moveEndY, X, Y;   
+
+    mybody.addEventListener('touchstart', function(e) {
+
+//      e.preventDefault();
+
+        startX = e.touches[0].pageX;
+
+        startY = e.touches[0].pageY;
+
+    });
+
+    mybody.addEventListener('touchmove', function(e) {
+
+//      e.preventDefault();
+
+        moveEndX = e.changedTouches[0].pageX;
+
+        moveEndY = e.changedTouches[0].pageY;
+
+        X = moveEndX - startX;
+
+        Y = moveEndY - startY;
+
+       if ( Y < - 60) {
+//     		console.log("‘向下’");
+       		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+				
+//					e.preventDefault();
+//					setGoodsTab('goods_ka',num,3);
+					ajax_sourch_submit();
+				
+			 }
+       }
+        
+
+    });
+     mybody.addEventListener('touchend', function(e) {
+
+//      e.preventDefault();
+
+        moveEndX = e.changedTouches[0].pageX;
+
+        moveEndY = e.changedTouches[0].pageY;
+
+        X = moveEndX - startX;
+
+        Y = moveEndY - startY;
+
+       if ( Y < - 60) {
+//     		console.log("‘向下’");
+       		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+				
+//					e.preventDefault();
+//					setGoodsTab('goods_ka',num,3);
+					ajax_sourch_submit();
+				
+			 }
+       }else if ( Y > 60 ) {}
+
+    });
+</script>
+</body>
+</html>

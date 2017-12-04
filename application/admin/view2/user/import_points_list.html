@@ -1,0 +1,148 @@
+<include file="public/layout" />
+<body style="background-color: rgb(255, 255, 255); overflow: auto; cursor: default; -moz-user-select: inherit;">
+<div id="append_parent"></div>
+<div id="ajaxwaitid"></div>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>导入积分管理</h3>
+                <h5>导入积分记录</h5>
+            </div>
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div id="explanation" class="explanation" style="color: rgb(44, 188, 163); background-color: rgb(237, 251, 248); width: 99%; height: 100%;">
+        <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+        </div>
+        <ul>
+            <li>导入积分记录, 可以查询导入积分历史记录.</li>
+        </ul>
+    </div>
+    <div class="flexigrid">
+        <div class="mDiv">
+            <div class="ftitle">
+                <h3>导入积分记录列表</h3>
+                <h5>(共<span id="user_count"></span>条记录)</h5>
+            </div>
+            <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+            <form class="navbar-form form-inline"  id="search-form2" onsubmit="return false">
+                <input type="hidden" name="order_by" value="user_id">
+                <input type="hidden" name="sort" value="desc">
+                <input type="hidden" name="mobile" value="" id="input-mobile" />
+                <div class="sDiv">
+                    <div class="sDiv2">
+                        <input type="text" id="search_key" size="30" class="qsbox" placeholder="手机...">
+                        <input type="submit" class="btn" onclick="ajax_get_table('search-form2',1)" value="搜索">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="hDiv">
+            <div class="hDivBox">
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th class="sign" axis="col0">
+                            <div style="width: 24px;"><i class="ico-check"></i></div>
+                        </th>
+                        <th align="left" abbr="user_id" axis="col3" class="">
+                            <div style="text-align: center; width: 80px;" class="">ID</div>
+                        </th>
+                        <th align="center" abbr="total_amount" axis="col6" class="">
+                            <div style="text-align: center; width: 80px;" class="">用户ID</div>
+                        </th>
+                        <th align="center" abbr="mobile" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">被保险人</div>
+                        </th>
+                        <th align="left" abbr="nickname" axis="col4" class="">
+                            <div style="text-align: center; width: 150px;" class="">手机号码</div>
+                        </th>
+                        <th align="center" abbr="mobile" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">车牌</div>
+                        </th>
+                        <th align="center" abbr="mobile" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">保费</div>
+                        </th>
+                        <th align="center" abbr="level" axis="col5" class="">
+                            <div style="text-align: center; width: 50px;" class="">积分</div>
+                        </th>
+                        <th align="center" abbr="mobile" axis="col6" class="">
+                            <div style="text-align: center; width: 150px;" class="">导入时间</div>
+                        </th>
+                        <th style="width:100%" axis="col7">
+                            <div></div>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="bDiv" style="height: auto;" id="ajax_return">
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        // 点击刷新数据
+        $('.fa-refresh').click(function(){
+            location.href = location.href;
+        });
+        ajax_get_table('search-form2',1);
+
+    });
+
+    //选中全部
+    $('.hDivBox .sign').click(function(){
+        var sign = $('#flexigrid > table>tbody>tr');
+       if($(this).parent().hasClass('trSelected')){
+           sign.each(function(){
+               $(this).removeClass('trSelected');
+           });
+           $(this).parent().removeClass('trSelected');
+       }else{
+           sign.each(function(){
+               $(this).addClass('trSelected');
+           });
+           $(this).parent().addClass('trSelected');
+       }
+    })
+
+    // ajax 抓取页面
+    function ajax_get_table(tab,page){
+        var search_key = $.trim($('#search_key').val());
+        if(search_key.length > 0){
+            if(checkEmail(search_key)){
+                $('#input-email').val(search_key);
+            }else if(checkMobile(search_key)){
+                $('#input-mobile').val(search_key);
+            }else{
+                layer.alert('请输入正确的邮箱或者手机号码', {icon: 2});
+            }
+        }
+        cur_page = page; //当前页面 保存为全局变量
+        $.ajax({
+            type : "POST",
+            url:"/index.php/Admin/user/ajax_import_points_list/p/"+page,//+tab,
+            data : $('#'+tab).serialize(),// 你的formid
+            success: function(data){
+                $("#ajax_return").html('');
+                $("#ajax_return").append(data);
+            }
+        });
+    }
+
+    // 点击排序
+    function sort(field)
+    {
+        $("input[name='order_by']").val(field);
+        var v = $("input[name='sort']").val() == 'desc' ? 'asc' : 'desc';
+        $("input[name='sort']").val(v);
+        ajax_get_table('search-form2',cur_page);
+    }
+
+</script>
+</body>
+</html>

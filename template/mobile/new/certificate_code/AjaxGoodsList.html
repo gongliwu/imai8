@@ -1,0 +1,18 @@
+<foreach name="coupon_list" item="v" key="k">
+ 	
+	<li>
+    <a href="{:U('Goods/goodsInfo',array('id'=>$v[goods_id]))}" class="item">
+        <div class="pic_box">
+            <img src="{$v.goods_id|goods_thum_images=400,400}">
+        </div>
+        <div class="title_box"style="height: 35px;">{$v.goods_name}</div>
+       <div class="pics">
+			<img src="__STATIC__/images/integral_icon.png" alt="">
+			<span  class="integral">能量:{$v.exchange_integral}</span>
+          	<i>￥{$v.shop_price}</i>
+       </div>
+       
+    </a>
+    
+  </li>
+</foreach>

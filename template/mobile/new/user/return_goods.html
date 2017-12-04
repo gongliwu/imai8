@@ -1,0 +1,441 @@
+<include file="public/header"/>
+<body style="background: #f3f4f5;">
+<style type="text/css">
+a:hover{font-size: 13px;}
+.orange_sq{color: #F23030;}
+.ques_sq .textarea_sq textarea{
+		min-height: 20px;
+		height:100%;
+		height: 100px;
+		line-height: 20px;
+		max-height: 200px;
+		overflow-y:visible ;
+		border: none;
+		font-size: 14px;
+	}
+	.layermcont,.actionsheet_content,.actionsheet_menu,.actionsheet,.layermchild.layermanim{border-radius: 5px;}
+	.inp_wrap{margin: 5px;display: block;background: url(__STATIC__/images/po.png)no-repeat;width: 72px;height: 60px;background-size:72px 60px ;}
+	.inp_wrap input{display: none;}
+	.img_del_btn{top: -70px;display: inline-block;width: 20px;height: 20px;background: url(__STATIC__/images/xin/apply_del.png)no-repeat ;background-size: 20px 20px ;position: relative;}
+	#return_goods_num{width: 100%;height: 30px;border: none;outline: none;}
+	.return_goods_num{
+
+		padding: 3px 5px;
+		background: #FFFFFF;
+	}
+	.ques_desc_sq{margin-top: 0px;}
+	.submit_sq{padding: 10px 10px;}
+	.submit_sq a{border-radius: 5px;}
+</style>
+<header>
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+    <div class="h-mid">申请售后</div>
+    <div class="h-right">
+      <aside class="top_bar">
+        <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</header>
+<include file="public/menu"/>
+	<form name="return_form" id="return_form" autocomplete="off" method="post" enctype="multipart/form-data" >
+
+		<div class="order_list">
+          <h2 style="border: none;">
+              <a href="javascript:void(0);">
+                  <img src="__STATIC__/images/dianpu.png"><span>订单号:{$order_sn}</span>
+                  <strong><if condition="$list[order_status] eq 5"><b>已作废</b></if>
+                  <span style="float: right;color: #f23030;">{$order_status[$list.order_status]}</span>
+              </a>
+          </h2>
+         	<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$goods['goods_id']))}">
+					<div class="order_list order_list_new_bg"style="background: #FFFFFF !important;" >
+				          <dl style="background: #FFFFFF!important;border: none;">
+				          <dt>
+				          	<img src="{$goods[goods_id]|goods_thum_images=400,400}">
+
+				          </dt>
+				          <dd class="name" class="pice" style=" width:50%;height: 100% ;">
+			                  <strong style="overflow: hidden;display: block;max-height: 80%;text-overflow: ellipsis;margin-top: 5px;">{$goods.goods_name}</strong>
+			                  <span style="color: #666;overflow: hidden;display: block;max-height: 20%;text-overflow: ellipsis;margin-top: 5px;">{$goods.spec_key_name}</span>
+		                   </dd>
+		                   <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">能量：{$goods['exchange_integral']}<em></em></dd>
+				          <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">￥{$goods['goods_price']}元<em></em></dd>
+				          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+
+		                  	<em>
+		                  		x{$goods['goods_num']}
+		                    </em>
+		                  </dd>
+				          </dl>
+				    </div>
+          	</a>
+       </div>
+       <!--<div style="font-size: 16px;padding-left: 10px;">
+       	 申请服务
+       </div>-->
+
+		<div class=""style="padding: 10px 10px;">
+			<div style="background: #FFFFFF;border-radius: 5px;">
+				<div style="padding:0px 10px ;font-size: 13px;">
+					<a id="retu_a_sq" class="orange_sq">
+						<div class="">
+							退货（仅限现金支付的商品）
+                				<input type="radio" style="display: none;float: right;margin-top: 12px;"checked="" value="0" name="type">
+                				<img style="float: right;margin-top: 10px;" src="__STATIC__/images/check.png"/>
+                			</div>
+                			</a>
+				</div>
+
+           		<div style="padding:0px 10px ;border-top: 1px solid #E0E0E0 ;font-size: 13px;">
+					<a id="chec_a_sq">
+						<div class="">
+							换货
+		            			<input type="radio" style="display: none;margin-top: 12px;float: right;" value="1" name="type">
+		            			<img style="display: none;float: right;margin-top: 10px;" src="__STATIC__/images/check.png"/>
+						</div>
+		            	</a>
+                	</div>
+            </div>
+
+		</div>
+
+		<!--<div class="padding_10_10 font_size_14 display_flex">
+			<div style="line-height: 40px;">
+				售后数量：
+			</div>
+			<div class="flex_1 return_goods_num">
+				<input type="text" name="return_goods_num" id="return_goods_num" value="1" />
+			</div>
+		</div>-->
+		<!--<div style="font-size: 16px;padding-left: 10px;">
+       	 申请原因
+       </div>
+
+		<div class=""style="padding: 10px 10px;">
+			<div style="background: #FFFFFF;border-radius: 5px;">
+				<div id="apply_res"onclick="show_mask()" style="padding:0px 10px ;font-size: 13px;">
+
+					请选择
+
+				</div>
+				<input type="hidden" name="return_reason" value="" />
+           </div>
+		</div>-->
+
+		<!--<div style="font-size: 16px;padding-left: 10px;">
+       	 交易金额
+       </div>
+
+		<div class=""style="padding: 10px 10px;">
+			<div style="background: #FFFFFF;border-radius: 5px;">
+				<div style="padding:0px 10px ;font-size: 13px;color: #333;">
+						{$order.order_amount}元+{$order.integral_money}能量
+				</div>
+           </div>
+		</div>-->
+
+		<div class="ques_sq ">
+			<div class="ques_desc_sq ">
+				<span style="font-size: 14px;">问题描述：</span>
+				<div class="textarea_sq"style="border: 1px solid #dedede;background: #FFFFFF;">
+					<textarea name="reason"contenteditable="true" id="reason" ></textarea>
+	                <!--<textarea name="reason"contenteditable="true" id="reason" onfocus="javascript:ResizeTextarea(this,2);" onclick="javascript:ResizeTextarea(this,2);" onkeyup="javascript:ResizeTextarea(this,2);"></textarea>-->
+	                <div id="number_wrap" style="font-size: 12px;color: #999;background: #FFFFFF;text-align: right;margin-top: -20px;width: 100%;border: none;">
+	                		200字以内&nbsp;&nbsp;
+	                </div>
+	                <div id="textarea_height"style=" display: none;width: 100%;font-size: 14px;font-weight: 200;line-height: 20px;word-break:break-all; word-wrap:break-word; ">
+
+	                </div>
+				</div>
+			</div>
+		</div>
+		<div class="file_up_sq">
+			<div class="file_sq">
+				<div id="input_file">
+					<div class="p_main"style="height: 70px;border: 1px dashed #999999;border-radius: 5px;margin-top: 10px;overflow: visible;">
+						<div id="label_wrap" style="float: left;">
+							<label for="fileList1"class="inp_wrap"><input type="file"id="fileList1" accept="image/*" name="return_imgs[]" onchange="handleFiles(this,1)"></label>
+							<label for="fileList2"class="inp_wrap"style="display: none;"><input type="file"id="fileList2" accept="image/*" name="return_imgs[]" onchange="handleFiles(this,2)"></label>
+							<label for="fileList3"class="inp_wrap"style="display: none;"><input type="file"id="fileList3" accept="image/*" name="return_imgs[]" onchange="handleFiles(this,3)"></label>
+						</div>
+
+                       	<div id="img_list_div" style="float: right;text-align: right;margin-right: 10px;">
+
+							<span id="tishi" style=" font-size:14px; display:inline-block; width:100%; overflow:hidden;color: #999999;line-height: 70px;">上传凭证，最多3张</span>
+						</div>
+
+                    </div>
+				</div>
+			</div>
+		</div>
+
+		<div class="submit_sq">
+	        <a href="javascript:void(0)" onClick="submit_form();" name="btnSubmit"><s></s>提交</a>
+		</div>
+    <div>
+    </div>
+	</div>
+
+      <input type="hidden" name="order_id" value="{$order_id}" />
+      <input type="hidden" name="order_sn" value="{$order_sn}" />
+      <input type="hidden" name="goods_id" value="{$goods_id}" />
+      <input type="hidden" name="spec_key" value="{$Request.param.spec_key}" />
+ </form>
+ <div id="img_del_mokuai" style="display: none;">
+ 	<div class="img_del_wrap" style="width: 60px;height: 60px;margin: 5px;float: right;">
+ 		<span class="img_del_btn" onclick="del_img(this)"></span>
+ 	</div>
+ </div>
+
+<foreach name="return_reasons" item="v" key="k">
+  <input type="hidden" name="reasons_val" value="{$v}">
+</foreach>
+
+
+
+<script type="text/javascript">
+	var img_list = {1:false,2:false,3:false};
+	var img_num = 0;
+	var q_arr = [];
+	var check_num = -1;
+
+$("#reason").focus(function(){
+  	document.getElementById('reason').onkeydown = function(event){
+		if(this.value.length >= 200&&event.keyCode!=8)
+	  	{
+	  		event.returnValue = false;
+	  		alert("最多200字");
+	  	}
+
+      }
+})
+var agt = navigator.userAgent.toLowerCase();
+var is_op = (agt.indexOf("opera") != -1);
+var is_ie = (agt.indexOf("msie") != -1) && document.all && !is_op;
+function ResizeTextarea(a,row){
+    if(!a){return}
+    if(!row)
+        row=5;
+    var b=a.value.split("\n");
+    var c=is_ie?1:0;
+    c+=b.length;
+    var d=a.cols;
+    if(d<=20){d=40}
+    for(var e=0;e<b.length;e++){
+        if(b[e].length>=d){
+            c+=Math.ceil(b[e].length/d)
+        }
+    }
+    c=Math.max(c,row);
+    if(c!=a.rows){
+        a.rows=c;
+    }
+}
+	function del_img(dom){
+		var num = $(dom).parent().attr("img_id");
+		img_list[num] = false;
+		var ofile = document.getElementById("fileList"+num);
+		 if(ofile.outerHTML){
+
+               ofile.outerHTML=ofile.outerHTML;
+
+        }
+
+        else{      //FF
+
+              ofile.value="";
+
+        }
+		if (img_num==3) {
+			for (var key in img_list) {
+	    			if (!img_list[key]) {
+	    				$(".inp_wrap").eq(key-1).show();
+	    				break;
+	    			}
+    			}
+		}else if (num ==1) {
+			$("#tishi").show();
+		}
+		img_num--;
+
+		$(dom).parent().remove();
+	}
+
+	var is_submit = 0;
+  function submit_form()
+  {
+		if (is_submit == 1) {
+			layer.msg('正在提交请稍后',{time:2000});
+			return false;
+		}
+	  var reason = $.trim($('#reason').val());
+	  var return_imgs= $.trim($('#return_imgs').val());
+//	   if (check_num == -1) {
+//	  	 layer.msg('请选择申请原因',{time:2000});// alert('请输入退换货原因!');
+//		  return false;
+//	  }
+	  if(reason == '')
+	  {
+		  layer.msg('请输入退换货原因',{time:2000});// alert('请输入退换货原因!');
+		  return false;
+	  }
+
+	  var ff = document.getElementsByName("return_imgs[]");
+
+	  if((ff[0].value.length + ff[1].value.length + ff[2].value.length ) == 0)
+	  {
+		  if(!confirm('确定不传照片吗?'))
+		  {
+			  return false;
+		  }
+      }
+
+	  $('#return_form').submit();
+	  is_submit = 1;
+  }
+
+   //  退换货颜色切换
+	$(document).ready(function(){
+			//$('#retu_a_sq').addClass('orange_sq');
+			$('#retu_a_sq').click(function(){
+				if ($(this).hasClass('orange_sq')) {
+					$('#chec_a_sq').removeClass('orange_sq').find("img").hide();;
+				} else{
+					$(this).addClass('orange_sq');
+					$(this).find('input').trigger('click');
+					$(this).find("img").show();
+					$('#chec_a_sq').removeClass('orange_sq');
+				}
+			});
+			$('#chec_a_sq').click(function(){
+				if ($(this).hasClass('orange_sq')) {
+					$('#retu_a_sq').removeClass('orange_sq').find("img").hide();;
+				} else{
+					$(this).addClass('orange_sq');
+					$(this).find('input').trigger('click');
+					$(this).find("img").show();
+					$('#retu_a_sq').removeClass('orange_sq');
+				}
+			})
+
+	})
+
+window.URL = window.URL || window.webkitURL;
+function handleFiles(obj,id) {
+	fileList = document.getElementById("fileList"+id);
+		var files = obj.files;
+		img = new Image();
+		$("#tishi").hide();
+		if(window.URL){
+
+			img.src = window.URL.createObjectURL(files[0]); //创建一个object URL，并不是你的本地路径
+			img.width = 60;
+	    		img.height = 60;
+			img.onload = function(e) {
+				window.URL.revokeObjectURL(this.src); //图片加载后，释放object URL
+			}
+//		    if(fileList.firstElementChild){
+//		         fileList.removeChild(fileList.firstElementChild);
+//		    }
+			$("#img_del_mokuai .img_del_wrap img").remove();
+			$("#img_del_mokuai .img_del_wrap").prepend(img).attr("img_id",id);
+			var oHtml = $("#img_del_mokuai").html();
+			$("#img_list_div").append(oHtml);
+		}else if(window.FileReader){
+			//opera不支持createObjectURL/revokeObjectURL方法。我们用FileReader对象来处理
+			var reader = new FileReader();
+			reader.readAsDataURL(files[0]);
+			reader.onload = function(e){
+		            img.src = this.result;
+		            img.width = 60;
+		            img.height = 60;
+		           	$("#img_del_mokuai .img_del_wrap img").remove();
+					$("#img_del_mokuai .img_del_wrap").prepend(img).attr("img_id",id);
+					var oHtml = $("#img_del_mokuai").html();
+					$("#img_list_div").append(oHtml);
+			}
+	    }else
+	    {
+			//ie
+			obj.select();
+			obj.blur();
+			var nfile = document.selection.createRange().text;
+			document.selection.empty();
+			img.src = nfile;
+			img.width = 60;
+		    img.height = 60;
+			img.onload=function(){
+
+		    }
+			$("#img_del_mokuai .img_del_wrap img").remove();
+			$("#img_del_mokuai .img_del_wrap").prepend(img).attr("img_id",id);
+			var oHtml = $("#img_del_mokuai").html();
+			$("#img_list_div").append(oHtml);
+	    }
+	    $(obj).parent().hide();
+	    img_list[id] = true;
+	    img_num++;
+	    if (img_num!=3) {
+	    		for (var key in img_list) {
+	    			if (!img_list[key]) {
+	    				$(".inp_wrap").eq(key-1).show();
+	    				break;
+	    			}
+	    		}
+	    }
+}
+
+//$("input[name='reasons']").each(function(){
+//	q_arr.push($(this).val());
+//	console.log(1,$(this).val());
+//})
+//$("input[name='reasons_val']").each(function(){
+//	q_arr.push($(this).val());
+//})
+
+	function show_mask(){
+		var listHtml = "";
+		var w = $(window).width()-40;
+		$.each(q_arr, function(key,row) {
+			if (check_num==key) {
+				listHtml += ' <div class="actionsheet-flex__item" style="width:'+ w +'px;height:30px;border-bottom:1px solid #f3f4f5;padding:10px 0px;line-height:30px;"onclick="set_apply_res('+ key +')">'+
+					row +
+					'<img width="30"height="30"style="float:right;" src="__STATIC__/images/apply_check.png"/>'+
+				'</div>';
+			} else{
+				listHtml += ' <div class="actionsheet-flex__item" style="width:'+ w +'px;height:30px;border-bottom:1px solid #f3f4f5;padding:10px 0px;line-height:30px;"onclick="set_apply_res('+ key +')">'+
+					row +
+					'<img width="30"height="30"style="float:right;" src="__STATIC__/images/nocheck.png"/>'+
+				'</div>';
+			}
+
+		});
+		layer.open({
+		  		type: 1,
+		  		title:false,
+		  		closeBtn: 0,
+		  		shadeClose: false,
+		  		content: '<div class="actionsheet">'+
+							'<div class="actionsheet_menu">'+
+								'<div class="actionsheet_content"style="padding:0px 10px;">'+
+									listHtml+
+						    ' </div>'+
+								'</div>'+
+							'</div>'+
+						'</div>'
+
+			})
+	}
+	function set_apply_res(check_id){
+		check_num = check_id;
+		$("#apply_res").text(q_arr[check_num]);
+		$("input[name='return_reason']").val(check_num);
+		layer.closeAll();
+	}
+</script>
+</body>
+</html>

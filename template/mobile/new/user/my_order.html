@@ -1,0 +1,41 @@
+<include file="public/header"/>
+<body style="background: #F3F4F5;">
+	<header>
+<div class="tab_nav">
+   <div class="header">
+     <div class="h-left"><a class="sb-back" href="{:U('User/index')}" title="返回"></a></div>
+     <div class="h-mid">我的订单</div>
+     <div class="h-right">
+       <!--<aside class="top_bar">
+         <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+       </aside>-->
+     </div>
+   </div>
+ </div>
+</header>
+<div id="tbh5v0">
+<div class="user_com">
+
+<style type="text/css">
+	/*为了不跟public.css冲突*/
+	.Wallet{padding: 0px 10px;width: auto;}
+	.Wallet a{padding: 10px 0px;width: auto;margin-left: 0px;border-bottom: 1px solid #eeeeee;}
+	.Wallet a:last-child{border-bottom: none;}
+	.Wallet a dl dd{margin-right: 40px;}
+</style>
+<div class="Wallet">
+	
+	<a href="{:U('Mobile/User/order_list')}"><em class="Icon Icon15"></em><dl><dt>实物订单</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('Mobile/CertificateCode/order_list')}"><em class="Icon Icon14"></em><dl><dt>团购券订单</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('Mobile/luckDraw/order_list')}"><em class="Icon Icon13"></em><dl><dt>抽奖订单</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('Mobile/insurance/orders')}"><em class="Icon Icon12"></em><dl><dt>保险订单</dt><dd>&nbsp;</dd></dl></a>
+	<a href=""><em class="Icon Icon17"></em><dl><dt>便民服务订单</dt><dd>&nbsp;</dd></dl></a>
+	<a href="{:U('User/return_goods_list')}"><em class="Icon Icon11"></em><dl ><dt>售后服务</dt><dd>&nbsp;</dd></dl></a>
+</div>
+
+</div>
+<include file="public/footer"/>
+</div>
+
+</body>
+</html>

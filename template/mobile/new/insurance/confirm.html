@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>确认订单</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+        <link rel="stylesheet" href="__STATIC__/css/example.css"/>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+        <style type="text/css">
+            label{width: 30%;text-align: right;}
+        </style>
+    </head>
+    <body>
+        <div class="container" id="container"></div>
+
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="title">
+                    <a class="title-back" href="./create.html">&nbsp;</a>
+                    <p>确认订单</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="weui-flex">
+            <div class="weui-flex__item step">1.立即购买</div>
+            <div class="weui-flex__item step setup-current">2.确认订单</div>
+            <div class="weui-flex__item step">3.购买成功</div>
+        </div>
+        
+        <div class="weui-panel">
+            <div class="weui-panel__hd">中国人寿财险车上人员意外险</div>
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_small-appmsg">
+                    <div class="weui-cells">
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p>保&nbsp;障&nbsp;期&nbsp;限&thinsp;：1年</p>
+                                <p>起&nbsp;保&nbsp;日&nbsp;期&thinsp;：<?php echo $tomorrow;?></p>
+                                <p>终&nbsp;保&nbsp;日&nbsp;期&thinsp;：<?php echo $nextyear;?></p>
+                                <p>保&#12288;障&#12288;额：<?php echo $insurance_amount;?>万</p>
+                                <p>车&nbsp;牌&nbsp;号&nbsp;码&thinsp;：<?php echo $car_no;?></p>
+                                <p>核保在客数：<?php echo $car_num;?>座</p>
+                                <p>驾驶员类型：<?php echo $car_type_text;?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-panel">
+            <div class="weui-panel__hd">投保人信息</div>
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_small-appmsg">
+                    <div class="weui-cells">
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p>投保人姓名：<span style="color: red;"><?php echo $name;?></span></p>
+                                <p>证&nbsp;件&nbsp;类&nbsp;型&thinsp;：身份证</p>
+                                <p>证&nbsp;件&nbsp;号&nbsp;码&thinsp;：<span style="color: red;"><?php echo $id_no;?></span></p>
+                                <p>出&nbsp;生&nbsp;日&nbsp;期&thinsp;：<?php echo $birthday;?></p>
+                                <p>性&#12288;&#12288;&#12288;别：<?php echo $sex;?></p>
+                                <p>手&nbsp;机&nbsp;号&nbsp;码&thinsp;：<?php echo $mobile; ?></p>
+                                <p>电&nbsp;子&nbsp;邮&nbsp;箱&thinsp;：<?php echo $email;?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-panel">
+            <div class="weui-panel__hd">商品列表</div>
+            <div class="weui-panel__bd">
+                    <a class="weui-cell weui-cell_access" href="javascript:;">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p style="color: #2859a4; font-size: 0.85em;">中国人寿保险车上人员意外险</p>
+                            </div>
+                            <span class="weui-cell__ft">x1<label style="padding-left: 30px;"><?php echo $price; ?>元</label></span>
+                    </a>
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd" style="text-align: right;">
+                            <p style="color: #999; font-size: 14px;">商品总价：<span style="color: red; font-size: 16px; font-weight: bold;"><?php echo $price; ?>.00元</span></p>
+                            <p style="color: #999; font-size: 14px;">应付款金额：<span style="color: red; font-size: 16px; font-weight: bold;"><?php echo $price; ?>.00元</span></p>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+
+        <div class="weui-btn-area" style="margin-bottom: 30px;">
+            <a class="weui-btn weui-btn_primary" href="./neworder.html">提交订单</button>
+        </div>
+
+    </body>
+</html>
+

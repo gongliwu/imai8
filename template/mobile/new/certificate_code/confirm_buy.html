@@ -1,0 +1,278 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="tpshop" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>购物车-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" href="__STATIC__/css/public.css?v=20170830">
+<link rel="stylesheet" href="__STATIC__/css/flow.css">
+<link rel="stylesheet" href="__STATIC__/css/style_jm.css">
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js?v=20170919" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<script src="__STATIC__/js/common.js?v=20170830"></script>
+</head>
+<style type="text/css">
+    .order-buy .order-info .order-list-info .list-info{padding-right: 10px;width: 72%;border-bottom: none;}
+    .order-buy .order-info .order-list-info .list-price-nums{width: 27%;}
+    .pay_btn{position: fixed;bottom: 0px; width: 100%;height: 50px;z-index: 999;line-height: 50px;}
+</style>
+<body style="background: rgb(235, 236, 237);position:relative;">
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"> <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a> </div>
+    <div class="h-mid"> 确认订单 </div>
+  </div>
+</div>
+<div class="screen-wrap fullscreen login">
+<form name="cart2_form" id="cart2_form" method="post">
+    <section class="content" style="min-height: 294px;">
+    <div class="wrap">
+    <div class="active" style="min-height: 294px;">
+    <div class="content-buy">
+    <div class="wrap order-buy">
+    <input type='hidden' name='goods_id' value='{$v.goods_id}'/>
+    <input type='hidden' name='goods_num' value='{$v.goods_num}'/>
+    <input type="hidden" name="spec_key" value="{$spec_key}"/>
+    <input type="hidden" name="spec_key_name" id="spec_key_name" value="{$spec_key_name}" />
+    <section class="order " id="order4">
+      <section class="order-info" style=" margin-top:0px;">
+        <div class="order-list">
+          <div class="goods-list-title">供货商：{$suppliers["suppliers_name"]}</div>
+          <ul class="order-list-info">
+            <li class="item"style="border-bottom: 1px solid #EEE;" >
+              <div class="itemPay list-price-nums" id="itemPay17">
+              	<p class="price">能量：{$v.member_exchange_integral}</p>
+                <p class="price">￥{$v.member_goods_price}元</p>
+                <p class="nums">x{$v.goods_num}</p>
+                 <?php
+                      	$integral_count += $v[goods_num] * $v[member_exchange_integral];
+                  ?>
+              </div>
+              <div class="itemInfo list-info" id="itemInfo12">
+                <div class="list-img"style="width: 60px;height: 60px;"> <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}"> <img src="{$v.goods_id|goods_thum_images=200,200}"alt="图片"></a> </div>
+                <div class="list-cont">
+                  <h5 class="goods-title">{$v.goods_name} </h5>
+                  <p class="godds-specification">{$spec_key_name}</p>
+                </div>
+              </div>
+            </li>
+<!--
+            <li class="flow_youhui_no"style="border-bottom: 0px;">
+       			<label>
+       			   使用能量：
+                   <input id="pay_points" name="pay_points" type="text"   placeholder="输入能量"  onpaste="this.value=this.value.replace(/[^\d]/g,'')" onKeyUp="this.value=this.value.replace(/[^\d]/g,'')" class="txt1" style="width:100px;"/>
+                   <input name="validate_bonus" type="button" value="使用" onClick="ajax_order_price();" class="BonusButton" />
+                 	<br/>您的可用能量：<em>{$user['pay_points']}</em>
+                 </label>
+            </li>-->
+            <input type="hidden" name="pay_type" id="pay_type" value="1" />
+          </ul>
+        </div>
+      </section>
+    </section>
+       <div class="pay_box_wrap">
+     	<div style="color: #666666;font-size: 16px;padding: 10px;border-bottom: 1px solid #E4E4E4;">
+     		请选择支付方式
+     	</div>
+
+     	<div style="height: auto;">
+     		<ul class="pay_box_wrap_ul">
+     			<li class="on" id="user_points" data="{$user['pay_points']}">能量支付(您当前能量为：{$user['pay_points']})</li>
+     			<input type="hidden" name="pay_points" id="pay_points" value="{$user['pay_points']}" />
+     			<li >现金支付</li>
+     		</ul>
+     	</div>
+
+     </div>
+            </div>
+        </div>
+      </div>
+    </div>
+ 	</section>
+  </form>
+</div>
+<div class="pay_btn display_flex background_white border_top_1">
+  	<div class="flex_2  padding_right_10 text_right">
+  		<div class="pay_box on">
+  			应付能量：<strong class="price color_red" id="pointsFee">0</strong>
+  		</div>
+  		<div class="pay_box">
+  			应付金额：￥<strong class="price_total color_red" id="payables">0</strong>
+  		</div>
+  	</div>
+  	<div class="flex_1 border_left_1 text_center color_red" id="pay_now" onclick="submit_order(1)">
+  		立即付款
+  	</div>
+  </div>
+<section class="f_mask" style="display: none;"></section>
+<include file="public/footer"/>
+<script type="text/javascript">
+$.each($(".pay_box_wrap_ul li"),function(key,row){
+    $(".pay_box_wrap_ul li").eq(key).click(function(){
+        $(".pay_box_wrap_ul li").removeClass("on").eq(key).addClass("on");
+        $(".pay_box").removeClass("on").eq(key).addClass("on");
+        var p_type = key==1?0:1;
+		$("input[name=pay_type]").val(p_type);
+		$("#pay_now").attr("onclick","submit_order("+ p_type +")");
+		ajax_order_price();
+    })
+})
+    $(document).ready(function(){
+        ajax_order_price(); // 计算订单价钱
+    });
+// 获取订单价格
+function ajax_order_price()
+{
+    $.ajax({
+        type : "POST",
+        url:'/index.php?m=Mobile&c=CertificateCode&a=calculatePrice&&t='+Math.random(),
+        data : $('#cart2_form').serialize(),
+        dataType: "json",
+        success: function(data){
+            if(data.status != 1)
+            {
+                alert(data.msg);
+                // 登录超时
+                if(data.status == -100)
+                    location.href ="{:U('Mobile/User/login')}";
+                return false;
+            }
+            // console.log(data);
+            //$("#balance").text(data.result.balance);// 余额
+            $("#pointsFee").text(data.result.pointsFee);// 能量支付
+//          if ($("#pay_points").val()<data.result.pointsFee) {
+//				$("#no_pay_points_btn").show();
+//				$("#pay_points_btn").hide();
+//			} else{
+//				$("#no_pay_points_btn").hide();
+//				$("#pay_points_btn").show();
+//			}
+            $("#payables").text(data.result.payables);// 应付
+
+            if ($("input[name=pay_type]").val() == 1) {
+				$("#pay_points_btn").show();
+				$("#pay_money_btn").hide();
+			}else{
+				$("#pay_points_btn").hide();
+				$("#pay_money_btn").show();
+			}
+        }
+    });
+}
+// 提交订单
+ajax_return_status = 1; // 标识ajax 请求是否已经回来 可以进行下一次请求
+function submit_order(pay_type)
+{
+	if(ajax_return_status == 0)
+	{
+		layer.msg("正在提交，请稍后...",{time:2000});
+		return false;
+	}
+
+	if (pay_type == 1) {
+
+		layer.open({
+		  		type: 1,
+		  		title: false,
+		  		closeBtn:0,
+		  		shadeClose: true,
+		  		content:'<div class="actionsheet"style="width:250px;">'+
+							'<div class="actionsheet_menu"style="width:250px;">'+
+                '<div class="actionsheet_content"><p>是否使用能量进行商品兑换?</p>'+
+                  '<p>将消耗'+ $("#pointsFee").text() +'能量</p>'+
+                '</div>'+
+				        '<div class="actionsheet-flex ">'+
+				        		'<div class="actionsheet-flex__item actionsheet_cancel_btn" onclick=" layer.closeAll()">取消</div>'+
+			              '<div class="actionsheet-flex__item actionsheet_confirm_btn" onclick="submit('+ pay_type +');">确认</div>'+
+			           ' </div>'+
+							'</div>'+
+						'</div>'
+		 });
+
+
+
+	}else{
+		submit(pay_type);
+	}
+   }
+function submit(pay_type){
+	layer.closeAll();
+  layer.load(1, {
+  	shade: [0.1,'#fff'] //0.1透明度的白色背景
+	});
+	ajax_return_status = 0;
+	 $.ajax({
+        type : "POST",
+        url:"{:U('Mobile/CertificateCode/addOrder')}",//+tab,
+        data : $('#cart2_form').serialize(),// 你的formid
+        dataType: "json",
+        success: function(data){
+            layer.closeAll();
+            if(data.status != '1')
+            {
+                alert(data.msg); //执行有误
+                // 登录超时
+                if(data.status == -100)
+                    location.href ="{:U('Mobile/User/login')}";
+
+				         ajax_return_status = 1; // 上一次ajax 已经返回, 可以进行下一次 ajax请求
+
+                return false;
+            }
+          var order_info = data.order_info[0];
+          if (pay_type == 1) {
+              if (order_info['pay_status'] == 0) {
+                var msg = "能量不足，无法直接购买！";
+                layer.msg(msg,{time:2000});
+                setTimeout(function(){
+                  location.href = "/index.php?m=Mobile&c=CertificateCode&a=order_detail&if_form_Code=1&id="+data.result.order_id;
+                },2500);
+              }else {
+
+        					var msg = "<p>消耗"+ order_info.integral +"能量。</p>";
+        					layer.open({
+        					  		type: 1,
+        					  		title: false,
+        					  		closeBtn:0,
+        					  		shadeClose: false,
+        					  		content:'<div class="actionsheet"style="width:250px;">'+
+        										'<div class="actionsheet_menu"style="width:250px;">'+
+                              '<div class="actionsheet_content"><p>能量购买成功</p>'+
+                                msg+
+                              '</div>'+
+    									        '<div class="actionsheet-flex ">'+
+    									        		'<div class="actionsheet-flex__item actionsheet_cancel_btn" onclick="home()">返回首页</div>'+
+    								              '<div class="actionsheet-flex__item actionsheet_confirm_btn" onclick="go_order_detal('+ data.result.order_id +');">查看订单</div>'+
+    								          '</div>'+
+        										'</div>'+
+        									'</div>'
+        					 });
+              }
+          }else {
+            layer.msg('订单提交成功，即将跳转支付页面!',{time:2000});
+    				setTimeout(function(){
+    					 window.location.href = "/index.php?m=Mobile&c=CertificateCode&a=pay&order_id="+data.result.order_id;
+
+    				},2500);
+          }
+
+
+
+        }
+    });
+}
+function home(){
+	window.location.href = "/index.php/mobile/Index/index.html";
+}
+function go_order_detal(order_id){
+	location.href = "/index.php?m=Mobile&c=CertificateCode&a=order_detail&id="+order_id;
+}
+</script>
+</body>
+</html>

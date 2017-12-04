@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>确认订单</title>
+        <link rel="stylesheet" href="__STATIC__/css/weui.min.css"/>
+		<link rel="stylesheet" href="__STATIC__/css/example.css"/>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/style.css?v=11">
+        <style type="text/css">
+            .we-agree{display: block;padding: .5em 15px;font-size: 13px;}
+            .we-agree__text {color: #999;}
+            .we-agree a {color: #586c94;}
+        </style>
+    </head>
+    <body>
+
+		<div class="weui-flex">
+			<div class="weui-flex__item">
+				<div class="title">
+					<a class="title-back" href="./detail.html">&nbsp;</a>
+					<p>确认订单</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="weui-flex">
+			<div class="weui-flex__item step">1.立即购买</div>
+			<div class="weui-flex__item step setup-current">2.确认订单</div>
+			<div class="weui-flex__item step">3.购买成功</div>
+		</div>
+		
+		<form method="POST" action="./confirm.html" id="confirm_form">
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">投保人姓名</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" placeholder="投保人姓名" name="name" id="name" value="<?php echo $name;?>"/>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">身份证号码</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" placeholder="请输入您的第二代身份证号码" name="id_no" id="id_no" value="<?php echo $id_no;?>"/>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">车牌号</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" placeholder="示例 A-123E" name="car_no" id="car_no" value="<?php echo $car_no;?>"/>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd"><label class="weui-label">电子邮箱</label></div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" placeholder="请输入您的常用邮箱" name="email" id="email" value="<?php echo $email;?>"/>
+					</div>
+				</div>
+			</div>
+			<label class="weui-agree">
+                <span class="weui-agree__text">
+                    确认即代表您同意 <a href="./copyright.html">《服务协议》</a>
+                </span>
+            </label>
+
+			<div class="weui-btn-area">
+				<button class="weui-btn weui-btn_primary" onclick="return submit_form();">确认</button>
+			</div>
+
+		</form>
+	
+	
+		<div class="weui-msg__extra-area">
+			<div class="weui-footer">
+				<p class="weui-footer__text">深圳市木棉花云网络科技有限公司 提供技术支持</p>
+			</div>
+		</div>
+
+<div id="dialogs">
+	<div class="js_dialog" id="tips" style="opacity: 0; display: none;">
+	    <div class="weui-mask"></div>
+	    <div class="weui-dialog">
+	        <div class="weui-dialog__bd" id="tips_body">弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内</div>
+	        <div class="weui-dialog__ft">
+	            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<script type="text/javascript" src="__STATIC__/js/zepto.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="__STATIC__/js/weui.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/IDValidator.js"></script>
+<script type="text/javascript" src="__STATIC__/js/GB2260.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('#dialogs').on('click', '.weui-dialog__btn', function(){
+        $(this).parents('.js_dialog').fadeOut(200);
+    });
+});
+
+
+function checkEmail(email){
+	// var pattern = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+	var pattern = /^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/;
+	return pattern.test(email);
+}    
+
+// 表单提交
+function submit_form() {
+	var name   = $('#name').val();
+	var id_no  = $('#id_no').val();
+	var car_no = $('#car_no').val();
+	var email  = $('#email').val();
+
+	if (!name) {
+		$('#tips_body').text('请填写投保人姓名');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+	if (!id_no) {
+		$('#tips_body').text('请填写身份证号码');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+    var validator = new IDValidator();
+	if (validator.isValid(id_no) == false) {
+		$('#tips_body').text('身份证号码有误');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+	if (!car_no) {
+		$('#tips_body').text('请填写车牌号');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+	if (!email) {
+		$('#tips_body').text('请填写电子邮箱');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+	if (!checkEmail(email)) {
+		$('#tips_body').text('邮箱格式有误');
+		$('#tips').fadeIn(200);
+		return false;
+	}
+
+	$('#confirm_form').submit();
+	return true;
+}
+</script>
+
+	</body>
+
+
+</html>

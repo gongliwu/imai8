@@ -1,0 +1,180 @@
+
+ <foreach name="cartList" item="v" key="k" >
+    <div  class="block" style="margin-top:0px;margin-bottom: 10px;">
+      <!--<div class="shop_title" >
+        <div class="fl"><a class="shopLink eclipse" href="javascript:void(0);">{$tpshop_config['shop_info_store_name']}</a>
+        <input type="hidden" name="supplierid" id="supplierid" value="7"></div>
+      </div>   -->
+      <div class="item-list">
+       <div class="item">
+         <div class="inner">
+           <div style="width:100%; float:left; height:98px;">
+             <div class="check-wrapper">
+                 <!--勾选按钮-->
+              <span  class="cart-checkbox  <if condition="$v[selected] eq 1" >checked</if>">
+                 <input type="checkbox" autocomplete="off" goods_id="{$v[goods_id]}" name="cart_select[{$v.id}]" <if condition="$v[selected] eq 1" >checked="checked"</if>  style="display:none;" value="1" onclick="ajax_cart_list();">
+              </span>
+             </div>
+             <div  class="pic">
+                 <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}"><img src="{$v.goods_id|goods_thum_images=200,200}"></a>
+             </div>
+             <div class="name">
+               {$v.goods_name}
+             </div>
+             <!-- <div class="attr">
+                 <span>{$v.spec_key_name}</span>
+             </div> -->
+             <div class="num">
+             	<p style="color: red;font-size: 14px;line-height: 14px;float: left;"><img src="__STATIC__/images/integral_icon.png" style="margin-top:-4px;" width="12" height="10" alt="">&nbsp;能量：{$v.exchange_integral}<br />
+             	<span style="color: gray;font-size: 14px;line-height: 14px;line-height:20px;">￥：{$v.member_goods_price}</span>
+             	</p>
+
+                 <div class="xm-input-number" style="float: right;">
+                   <div class="act_wrap">
+                      <a href="javascript:;" onclick="switch_num(-1,{$v.id},{$v.store_count});" id="jiannum6" class="input-sub active"></a>
+                     	<input id="goods_num[{$v.id}]" type="text" onKeyDown='if(event.keyCode == 13) event.returnValue = false' name="goods_num[{$v.id}]"  value="<if condition='$v[goods_num] gt $v[store_count]'>{$v[store_count]}<else />{$v[goods_num]}</if>"  class="input-num"  onblur="ajax_cart_list()"/>
+                     	<a href="javascript:;" onclick="switch_num(1,{$v.id},{$v.store_count});"  class="input-add active"></a>
+                     </div>
+                  </div>
+
+             </div>
+           </div>
+
+           <div style="height:0px; line-height:0px; clear:both;"></div>
+         </div>
+         <div class="append"></div>
+       </div>
+      </div>
+    </div>
+</foreach>
+<if condition="empty($cartList)">
+<div class="screen-wrap fullscreen login">
+<section id="cart-content">
+      <div class="qb_tac" style="padding:50px 0">
+        <img src="__STATIC__/images/flow/empty_cart.png" width="100" height="95">
+        <br>购物车还是空的</div>
+      <div class="qb_gap" style="width:60%; margin:0 auto;">
+        <a href="{:U('Index/index')}" class="mod_btn btn_strong">马上逛逛</a>
+      </div>
+</section>
+<div style="height:72px;"></div>
+<section class="f_mask" style="display: none;"></section>
+<section class="f_block" id="choose" style="height:0px;"></section>
+</div>
+ <else/>
+	 <div class="bottom-panel display_flex border_top_1">
+	    <div class="quanxuan"style="width: 70px;">
+	     <div class="check-wrapper">
+	        <span class="cart-checkbox" onclick="chkAll_onclick()"></span><span class="cart-checktext">全选</span>
+	     </div>
+	   </div>
+	   <div class="font_size_14 flex_1 padding_top_7 subtotal">
+	   	<span class="color_red "><em>总计能量：</em>{$total_price.total_points}</span>
+	     <br>
+	     <span class="color_gray" id="cart_amount_desc"><em>总额：</em>￥{$total_price.total_fee}元</span>
+	   </div>
+	   <div class="flex_1 right clear_car background_white color_red border_left_1">
+	   		<label for="go_clear_car"style="display: block;">去结算</label>
+	     	<input type="button" href="javascript:void();"style="display: none;"  onclick="return selcart_submit();" id="go_clear_car" value="">
+
+	   </div>
+     <div class="show_dele flex_2">
+
+       <div onclick="del_cart_more()" style="float:right;border:1px solid red;padding:3px 10px;color:red;margin-top:15px;width:80px;text-align:center;margin-right:10px;">
+         删除
+       </div>
+       <div onclick="like_cart_more()" style="float:right;border:1px solid red;padding:3px 10px;margin-right:15px;color:#666;margin-top:15px;width:80px;text-align:center;">
+         移入收藏
+       </div>
+     </div>
+
+
+	 </div>
+</if>
+<script type="text/javascript">
+
+    //选择商品
+$(".check-wrapper .cart-checkbox").click(function(){
+	if($(this).hasClass('checked')){
+		$(this).removeClass('checked');
+		$(this).find('input').attr('checked',false);
+	}else{
+		$(this).addClass('checked');
+		$(this).find('input').attr('checked',true);
+	}
+	ajax_cart_list();
+})
+
+//定义变量
+var is_checked = true;
+$('.inner .cart-checkbox').each(function(){
+        //判断商品是否选中
+	  if(!$(this).hasClass('checked'))
+	  {
+	       is_checked = false;
+	       return false;
+	  }
+});
+if(is_checked){
+  	$('.quanxuan .cart-checkbox').addClass('checked');
+}else
+{
+  	$('.quanxuan .cart-checkbox').removeClass('checked');
+}
+
+
+function chkAll_onclick()
+{
+
+    //  取消
+  if($('.quanxuan .cart-checkbox').hasClass('checked')){
+
+    $('.quanxuan .cart-checkbox').removeClass('checked');
+    $('.inner .cart-checkbox').removeClass('checked');
+    $("input[name^='cart_select']").prop('checked',false);
+    is_checked = false;
+  }
+  //全选
+  else{
+    $('.quanxuan .cart-checkbox').addClass('checked');
+    $('.inner .cart-checkbox').addClass('checked');
+    $("input[name^='cart_select']").prop('checked',true);
+    is_checked = true;
+  }
+  ajax_cart_list();
+}
+
+function del_cart_goods(goods_id)
+{
+    if(!confirm('确定要删除吗?'))
+        return false;
+    var chk_value = [];
+    chk_value.push(goods_id);
+    // ajax调用删除
+    if(chk_value.length > 0)
+        ajax_del_cart(chk_value.join(','));
+
+    updateCart();
+}
+
+
+//点击结算
+function selcart_submit()
+{
+    //获取中的商品数量
+     var j=0;
+     $('input[name^="cart_select"]:checked').each(function(){
+       j++;
+     });
+    //判断是否有选择
+     if (j>0)
+     {
+		  window.location.href="{:U('Mobile/Cart/cart2')}"
+     }
+     else
+     {
+	     alert('请选择要结算的商品！');
+	     return false;
+    }
+}
+</script>

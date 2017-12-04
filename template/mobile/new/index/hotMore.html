@@ -1,0 +1,195 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop v1.1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>热卖商品-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170730"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/index.css?v=20170730"/>
+<style type="text/css">
+.floor_body2 ul li:nth-child(even) {float: left}
+.index_search_mid{height: 45px;}
+.index_search_mid input{margin-top: 10px ;}
+.font_16{font-size: 16px;}
+.font_14{font-size: 14px;}
+.pd-10{padding: 10px;}
+.pd-10-0{padding: 10px 0px;}
+.pd-0-10{padding: 0px 10px;}
+.pd_0_5{padding: 0px 5px;}
+.h40{height: 40px;line-height: 40px;}
+.d_l{display: flex;}
+.f1{flex: 1;}
+.f2{flex: 2;}
+.ma_top_5{margin-top: 5px;}
+.ma_top_10{margin-top: 10px;}
+.bg_white{background: #FFFFFF;}
+.text_fr{text-align: right;}
+.floor_body2 ul li{width: 33%;margin-right: 0.5%;}
+.floor_body2 ul li:nth-child(3n){margin-right: 0px;}
+.pics{width: 100%;height: 30px;}
+.integral{text-align: left;padding-left: 5px;line-height: 16px;}
+.integral img{vertical-align: middle;width: 12px;}
+.integral span{font-size: 12px;color: red;vertical-align: middle;}
+.integral i{font-size: 12px;color: #999;}
+.floor_body2 ul li .goods_name{font-size: 12px;}
+</style>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__STATIC__/js/TouchSlide.1.1.js"></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.json.js"></script>
+<script type="text/javascript" src="__STATIC__/js/touchslider.dev.js"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js?v=20170919" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<!-- IE8及以下支持JSON -->
+<!--[if lt IE 9]>
+    <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
+<![endif]-->
+<!-- WSDK-->
+<script src="https://g.alicdn.com/aliww/h5.openim.sdk/1.0.6/scripts/wsdk.js"></script>
+</head>
+<body>
+<div id="page" class="showpage">
+<div>
+<header id="header">
+	<div class="h-left top_gb">
+	      <a class="sb-back w" href="{:U('/Mobile/index/index')}" title="返回"></a>
+	</div>
+	<span href="javascript:void(0)" class="logo">热卖商品</span>
+</header>
+
+
+<div class="floor_body2 ma_top_5" >
+
+	<div id="J_ItemList">
+
+    		<ul class="product single_item info">
+    		</ul>
+    		<a href="javascript:;" class="get_more" style="text-align:center; display:block;">
+    		<img src='__STATIC__/images/category/loader.gif' width="12" height="12"> </a>
+  	</div>
+  	<div id="getmore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;display: none;">
+  		<a href="javascript:void(0)" onClick="getGoodsList()">点击加载更多</a>
+  	</div>
+  	<div id="nomore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;display: none;">
+  		<a href="javascript:void(0)" >没有更多了~~</a>
+  	</div>
+</div>
+
+<a href="javascript:goTop();" class="gotop"><img src="__STATIC__/images/topup.png"></a>
+</div>
+
+</div>
+
+
+
+<script type="text/javascript">
+var url = "index.php?m=Mobile&c=Index&a=ajaxGetMore";
+$(function(){
+	//$('#J_ItemList').more({'address': url});
+	getGoodsList();
+});
+
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600);
+}
+
+var page = 1;
+var hasMore = true;
+function getGoodsList(){
+
+	if (hasMore) {
+		$('.get_more').show();
+		$.ajax({
+			type : "get",
+			url:"/index.php?m=Mobile&c=Index&a=ajaxGetMore&p="+page,
+			success: function(data)
+			{
+				if(data){
+					$("#J_ItemList>ul").append(data);
+					page++;
+					$('.get_more').hide();
+				}else{
+					$('.get_more').hide();
+					$('#getmore').remove();
+					$("#nomore").show();
+					hasMore = false;
+				}
+			}
+		});
+	}
+
+}
+var mybody = document.getElementsByTagName('body')[0];
+    //滑动处理
+
+    var startX, startY, moveEndX, moveEndY, X, Y;
+
+    mybody.addEventListener('touchstart', function(e) {
+
+//      e.preventDefault();
+
+        startX = e.touches[0].pageX;
+
+        startY = e.touches[0].pageY;
+
+    });
+
+    mybody.addEventListener('touchmove', function(e) {
+
+//      e.preventDefault();
+
+        moveEndX = e.changedTouches[0].pageX;
+
+        moveEndY = e.changedTouches[0].pageY;
+
+        X = moveEndX - startX;
+
+        Y = moveEndY - startY;
+
+       if ( Y < - 60) {
+//     		console.log("‘向下’");
+       		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+
+//					e.preventDefault();
+//					setGoodsTab('goods_ka',num,3);
+					getGoodsList();
+
+			 }
+       }
+
+
+    });
+     mybody.addEventListener('touchend', function(e) {
+
+//      e.preventDefault();
+
+        moveEndX = e.changedTouches[0].pageX;
+
+        moveEndY = e.changedTouches[0].pageY;
+
+        X = moveEndX - startX;
+
+        Y = moveEndY - startY;
+
+       if ( Y < - 60) {
+//     		console.log("‘向下’");
+       		if ($(document).scrollTop() + $(window).height() > $(document).height()-50 ){
+
+//					e.preventDefault();
+//					setGoodsTab('goods_ka',num,3);
+					getGoodsList();
+
+			 }
+       }else if ( Y > 60 ) {}
+
+    });
+
+</script>
+<script src="__PUBLIC__/js/jqueryUrlGet.js"></script><!--获取get参数插件-->
+<script> set_first_leader(); //设置推荐人 </script>
+</body>
+</html>

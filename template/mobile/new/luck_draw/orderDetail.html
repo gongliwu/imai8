@@ -1,0 +1,339 @@
+<include file="public/header"/>
+<body style="background: #f3f4f5;">
+<header>
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+    <div class="h-mid">订单详情</div>
+    <div class="h-right">
+
+    </div>
+  </div>
+</div>
+</header>
+<if condition="$is_luck eq 1">
+	<input type="hidden" id="luck_sn" name="luck_sn"  value="{$good_luck_user['luck_sn']}" />
+<else>
+	<input type="hidden"id="luck_sn" name="luck_sn"  value="" />
+</if>
+<div id="tbh5v0">
+	<!--开奖时显示中奖号码-----中奖 -->
+  <if condition="$luck_draw.good_luck_user_id neq 0">
+  	<if condition="$is_luck eq 1">
+  		<div class="order_list red_bg" >
+  			<dl style="border-bottom: none;display: flex;">
+  				<dt>
+  					<img style="width: 60px;height: 60px;border-radius: 30px;" src="{$good_luck_user.head_pic|default='__STATIC__/images/user68.jpg'}">
+  				</dt>
+  				<dd class="name" class="pice" style="  flex: 1;height: 100%;line-height: 60px;font-size: 14px;">
+  					获得者： {$good_luck_user['nickname']}
+  				</dd>
+  				<dd class="pice" style=" font-size:13px; color:#FFFFFF;  flex: 1;float: right;line-height: 60px;">
+  					参与次数：{$order_goods['luck_joined_times']}
+  				</dd>
+  			</dl>
+  		</div>
+  	</if>
+   	<!--开奖时显示中奖号码-----没中奖 -->
+   	<if condition="$is_luck eq 0">
+  		<div class="order_list gray_bg" >
+  	        <dl style="border-bottom: none;display: flex;">
+  	          <dt style="display: block;">
+  	          	<img style="width: 60px;height: 60px;border-radius: 30px;" src="{$good_luck_user.head_pic|default='__STATIC__/images/user68.jpg'}">
+  	          </dt>
+  	          <dd class="name" class="pice" style=" height: 100%;line-height: 60px;font-size: 14px;flex: 1;">
+                      获得者：{$good_luck_user['nickname']}
+               </dd>
+  	          <dd class="pice" style=" font-size:13px;  flex: 1;float: right;line-height: 60px;">
+                	参与次数：{$order_goods['luck_joined_times']}
+              </dd>
+  	       </dl>
+  	    </div>
+  	</if>
+  	<!--中奖时--如果已经填写地址就显示-->
+  	<if condition="($is_luck eq 1) and (empty($address) neq true)">
+
+  		<img width="100%" style="display: block;" src="__STATIC__/images/xin/order_info_top.png"/>
+      <if condition="($order['country'] eq 0) and ($order['consignee'] eq '')">
+  		<a href="{:U('User/address_list',array('source'=>'luck_order','order_id'=>$order_goods['order_id']))}">
+      </if>
+  			<div class="detail_top"style="border-bottom: none;">
+
+  				<dl>
+  				<dt class="dingdan_3"style="margin-top: 10px;"></dt>
+  				<dd>
+  					<h3>收货人&nbsp;:&nbsp;{$address.consignee}<em>334{$address.mobile}</em></h3>
+  					<div class="adss"style="padding: 10px 0px 0px 0px ;">收货地址&nbsp;:&nbsp;{$address.address}</div>
+  				</dd>
+  				</dl>
+
+  			</div>
+      <if condition="($order['country'] eq 0) and ($order['consignee'] eq '')">
+  		</a>
+      </if>
+  	 	<img width="100%"style="display: block;" src="__STATIC__/images/xin/order_info_bottom.png"/>
+
+  	</if>
+   	<!--物流-发货就显示-->
+   	<if condition="($is_luck eq 1) and ($order_goods.is_send eq 1)">
+
+  		<div style="margin-top: 10px; height: 80px;">
+          <a style="display: block" href="{:U('User/express',array('order_id'=>$order_info['order_id']))}" >
+  				<div class="detail_top"style="border-bottom: none;height: 80px;">
+
+  					<dl>
+  					<dt class="wait_img"style="margin-top: 20px;background: url(__STATIC__/images/xin/wait.png)no-repeat;height: 25px;"></dt>
+  					<dd>
+  						<h3 style="height: 30px;line-height: 30px;"onclick="">包裹正在等待收件<em style="height: 80px;background: url(__STATIC__/images/xin/gt.png)no-repeat;height: 25px;width: 25px;margin-top: 20px;"></em></h3>
+  						<h3 style="height: 40px;">{$order['shipping_time']}</h3>
+  					</dd>
+  					</dl>
+  				</div>
+          </a>
+  		</div>
+
+   	</if>
+  </if>
+
+	<div class="ord_list1" style="border: none;">
+			<h2>
+        订单号：{$order.order_sn}
+        <span style="float: right;color: #f23030;">
+          <if condition="$order_goods.luck_status eq 0">
+            进行中
+          <elseif condition="$order_goods.luck_status eq 1">
+            未中奖
+          <else>
+            中奖
+          </if>
+
+        </span>
+      </h2>
+ </div>
+	<!--抽奖商品--只有一个吧-->
+			<div class="order_list order_list_new_bg" >
+		        <a href="{:U('Mobile/LuckDraw/detail',array('luck_id'=>$luck_draw['luck_id']))}">
+		          <dl >
+		          <dt>
+		          	<img src="{$goods.goods_id|goods_thum_images=70,70}">
+
+		          </dt>
+		          <dd class="name" class="pice" style=" width:50%;height: 100%;">
+	                  <strong style="overflow: hidden;display: block;height: 16px !important;text-overflow: ellipsis;margin-top: 5px;">
+                        {$goods.goods_name}
+                    </strong>
+	                  <span style="color: #666;overflow: hidden;display: block;max-height: 20%;text-overflow: ellipsis;margin-top: 5px;">
+                      第{$luck_draw['period']}期
+                    </span>
+            <?php
+                $persent = 0;
+                if ($luck_draw['joined_times'] > 0) {
+                    $_persent = ($luck_draw['joined_times']/$luck_draw['total_times']) * 100;
+                    if (0 < $_persent && $_persent < 1) {
+                        $persent = 1;
+                    } elseif(99 < $_persent && $_persent < 100) {
+                        $persent = 99;
+                    } else {
+                        $persent = round($_persent, 0);
+                    }
+                }
+            ?>
+						<div class="progress_wrap" style="margin-top: 5px;">
+							<div class="progress_bar"style="width: {$persent}%;">
+								&nbsp;&nbsp;{$persent}%&nbsp;&nbsp;
+							</div>
+						</div>
+
+              </dd>
+		          <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">{$luck_tpl['pay_integral']}积分一次<em></em></dd>
+		          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+		          	<if condition="($list[return_btn] eq 1) and ($good[is_send] lt 2)">
+	                  	<a href="{:U('Mobile/User/return_goods',array('order_id'=>$list[order_id],'order_sn'=>$list[order_sn],'goods_id'=>$good[goods_id],'spec_key'=>$good['spec_key']))}" style="apply_apter_btn">申请售后</a>
+	              </if>
+              	<em>
+              		x{$order_goods['luck_joined_times']}
+                </em>
+              </dd>
+		          </dl>
+		          </a>
+		    </div>
+	 <div style="border:0;text-align: right;padding: 0px 10px 10px 10px;color: #070707;font-size: 12px;background: #FFFFFF;">
+     合计：<span style="font-size: 16px;color: red;">{$order_goods['luck_total_integral']}积分</span>
+   </div>
+
+	</div>
+
+
+	<div class="ord_list1"id="number_wrap" style="border: none;">
+
+		<div style="display: flex;font-size: 14px;color: #666;">
+			<div style="flex: 1;padding-left: 10px;min-width: 80px !important;">参与号码：</div>
+			<div id="show_two_number" style="flex: 3;"></div>
+			<div onclick="show_number()"id="show_number" style="flex: 1;float: right;color: #f23030;min-width: 80px !important;text-align: right;padding-right: 10px;">展开所有</div>
+		</div>
+		<!--	本人参与的所有号码-上面显示两个-下面显示剩下的-->
+		<div id="add_numbers" style="font-size: 14px;color: #666;padding: 0px 10px;word-wrap:break-word;display: none;">
+		</div>
+
+	</div>
+
+		<div style=" height:50px;"></div>
+		<style type="text/css">
+			.on_comment{margin-left: 10px;width: auto !important;padding: 0px 5px;}
+			.red_btn{border: 1px solid #f23030 !important;color: #f23030 !important; }
+		</style>
+		<div class="detail_dowm" style="background: #FFFFFF;">
+			<div class="anniu1" style="text-align: center;font-size: 14px;line-height: 50px;">
+        <if condition="($luck_draw.good_luck_user_id neq 0) and ($is_luck eq 1)">
+            <if condition="empty($address) eq true">
+              <a href="{:U('/Mobile/User/address_list',array('source'=>'luck_order','order_id'=> $order_goods['order_id']))}" class="on_comment red_btn">
+                已中奖请填写收货地址
+              </a>
+            </if>
+            <if condition="($order['country'] eq 0) and ($order['consignee'] eq '')">
+              <a href="javascript:void(0);" class="on_comment red_btn" onclick="add_order_address()">
+                确认收货地址
+              </a>
+            </if>
+            <if condition="$order_info.receive_btn eq 1">
+              <a href="{:U('Mobile/User/order_confirm',array('id'=>$order_info['order_id']))}" class="on_comment red_btn">
+                确认收货
+              </a>
+            </if>
+        <else>
+            <if condition="($luck_draw.good_luck_user_id neq 0) and ($is_luck eq 0)">
+                已参与，未中奖
+            <else>
+                已参与，等待开奖
+            </if>
+
+        </if>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+</body>
+<script type="text/javascript">
+	$(function(){
+		var luck_number = 0;
+		if($("#luck_sn").val()!=""){
+			luck_number = $("#luck_sn").val();
+		}
+
+		if (luck_number==0) {
+
+			$.ajax({
+			type:"get",
+			url:"{:U('LuckDraw/myLuckSn',array('luck_id'=>$luck_draw['luck_id'],'user_id'=>$user_id,'order_id'=>$order['order_id']))}",
+			async:true,
+			success:function(res){
+				if (res.status==1) {
+					var list = res.luck_sn_list;
+					var listHtml = "";
+					if (list.length>2) {
+						$("#show_number").show();
+
+						listHtml += list[0]+"&nbsp;&nbsp;";
+						listHtml += list[1]+"";
+						$("#show_two_number").append(listHtml);
+						listHtml = '';
+						for (var i=2;i<list.length;i++) {
+
+							listHtml += list[i]+"&nbsp;&nbsp;";
+						}
+						$("#add_numbers").append(listHtml);
+					}else{
+						$("#show_number").hide();
+						$.each(list, function(key,row) {
+							listHtml += row+"&nbsp;&nbsp;";
+						});
+						$("#show_two_number").append(listHtml);
+					}
+
+				}
+			}
+		});
+
+
+		}else{
+
+
+		$.ajax({
+			type:"get",
+			url:"{:U('LuckDraw/myLuckSn',array('luck_id'=>$luck_draw['luck_id'],'user_id'=>$user_id,'order_id'=>$order['order_id']))}",
+			async:true,
+			success:function(res){
+				if (res.status==1) {
+					var list = res.luck_sn_list;
+					var listHtml = "";
+					if (list.length>2) {
+						$("#show_number").show();
+						if (list[0]==luck_number) {
+							listHtml += '<span style="color: #f23030;">'+list[0]+'</span>&nbsp;&nbsp;';
+						}else{
+							listHtml += list[0]+"&nbsp;&nbsp;";
+						}
+						if (list[1]==luck_number) {
+							listHtml += '<span style="color: #f23030;">'+list[1]+'</span>&nbsp;&nbsp;';
+						}else{
+							listHtml += list[1]+"";
+						}
+						$("#show_two_number").append(listHtml);
+						listHtml = '';
+						for (var i=2;i<list.length;i++) {
+							if (luck_number==list[i]) {
+								listHtml += '<span style="color: #f23030;">'+list[i]+'</span>&nbsp;&nbsp;';
+							}else{
+								listHtml += list[i]+"&nbsp;&nbsp;";
+							}
+						}
+						$("#add_numbers").append(listHtml);
+					}else{
+						$("#show_number").hide();
+						$.each(list, function(key,row) {
+							if (luck_number==row) {
+								listHtml += '<span style="color: #f23030;">'+row+'</span>&nbsp;&nbsp;';
+							}else{
+								listHtml += row+"&nbsp;&nbsp;";
+							}
+
+						});
+						$("#show_two_number").append(listHtml);
+					}
+
+				}
+			}
+		});
+
+
+		}
+	})
+
+	function show_number(){
+		if ($("#add_numbers").is(":hidden")) {
+			$("#show_number").text("收起所有");
+			$("#add_numbers").show();
+		} else{
+			$("#show_number").text("展开所有");
+			$("#add_numbers").hide();
+		}
+
+	}
+
+  //填写订单地址
+  function add_order_address(){
+    $.ajax({
+			type : 'post',
+			url :"{:U('/Mobile/LuckDraw/addOrderAddress',array('address_id'=>$address['address_id'],'order_id'=>$order['order_id']))}",
+			success : function(data){
+        if(data.result < 1)
+          return ;
+				window.location.href = "{:U('/Mobile/LuckDraw/order_list')}";
+			}
+		})
+  }
+</script>
+</html>

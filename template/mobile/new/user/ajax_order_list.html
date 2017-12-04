@@ -1,0 +1,74 @@
+
+  <volist name="lists" id="list">
+       <div class="order_list">
+          <h2>
+              <a href="javascript:void(0);">
+                  <img src="__STATIC__/images/dianpu.png"><span>订单号:{$list.order_sn}</span>
+                  <strong><if condition="$list[order_status] eq 5"><b>已作废</b></if>
+                  <!--<img src="__STATIC__/images/icojiantou1.png"></strong>-->
+                  <?php $v = set_btn_order_status($list);?>
+                  <span style="float: right;color: #f23030;">{$v.order_status_desc}</span>
+              </a>
+          </h2>
+         	<a href="{:U('/Mobile/User/order_detail',array('id'=>$list['order_id']))}">
+
+			      <volist name="list.goods_list" id="good">
+					<div class="order_list order_list_new_bg" >
+				          <dl >
+				          <dt>
+				          	<img src="{$good.goods_id|goods_thum_images=200,200}">
+
+				          </dt>
+				          <dd class="name" class="pice" style=" width:50%;height: 100%;">
+			                  <strong style="overflow: hidden;display: block;max-height: 80%;text-overflow: ellipsis;margin-top: 5px;">{$good.goods_name}</strong>
+			                  <span style="color: #666;overflow: hidden;display: block;max-height: 20%;text-overflow: ellipsis;margin-top: 5px;">{$good.spec_key_name}</span>
+		                   </dd>
+		                   <notempty name="good[spec_key_name]">
+	                   			<dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">能量：{$good['spec_exchange_integral']}<em></em></dd>
+	                   		<else>
+	                   			<dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">能量：{$good['exchange_integral']}<em></em></dd>
+	                   	   </notempty>
+				          <dd class="pice" style=" font-size:13px; color:#F23030; width:25%;float: right;">￥{$good['member_goods_price']}元<em></em></dd>
+				          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+				          	<if condition="($list[return_btn] eq 1) and ($good[is_send] eq 1)">
+			                  	<a href="{:U('Mobile/User/return_goods',array('order_id'=>$list[order_id],'order_sn'=>$list[order_sn],'goods_id'=>$good[goods_id],'spec_key'=>$good['spec_key']))}" class="apply_apter_btn">申请售后</a>
+			                </if>
+		                  	<em>
+		                  		x{$good['goods_num']}
+		                    </em>
+		                  </dd>
+				          </dl>
+				    </div>
+				</volist>
+          	</a>
+          <if condition="$v.order_status_desc neq '已取消'">
+	          <div class="display_flex border_bottom_1">
+	          	<div class="flex_1 padding_left_10 font_size_14">
+	          		共{$list.goods_list|count}件商品&nbsp;&nbsp;
+	          	</div>
+	          	<div class="font_size_14 padding_right_10">
+                <if condition="$list.pay_btn eq 1">
+	          				<p><span id="">能量支付：</span><strong class="color_red font_size_16">{$list['integral']}</strong></p>
+	          				<p><span id="">现金支付：</span><strong class="color_red font_size_16">￥{$list['order_amount']}</strong></p>
+	          		<else>
+										<if condition="($list['pay_code'] eq 'integral')">
+			          				<p><span id="">实付：</span><strong class="color_red font_size_16">{$list['integral']}能量</strong></p>
+			          		<else>
+			          				<p><span id="">实付：</span><strong class="color_red font_size_16">￥{$list['order_amount']}</strong></p>
+			          		</if>
+	          		</if>
+	          	</div>
+
+	        </div>
+	      <else>
+	      	<div style="height: 10px;background: #FFFFFF;"></div>
+          </if>
+          <div class="anniu" style="width:95%;height: auto;">
+                <if condition="$list.cancel_btn eq 1"><span style="margin-left: 10px;margin-bottom: 10px;" onClick="cancel_order({$list.order_id})">取消订单</span></if>
+                <if condition="$list.pay_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="javascript:;" onclick="integral_pay({$list.order_id})">能量支付</a><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('Mobile/Cart/cart4',array('order_id'=>$list['order_id']))}">立即付款</a></if>
+                <if condition="$list.receive_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('Mobile/User/order_confirm',array('id'=>$list['order_id']))}">确认收货</a></if>
+                <if condition="$list.comment_btn eq 1"><a  style="margin-left: 10px;margin-bottom: 10px;"href="{:U('/Mobile/User/comment')}">评价</a></if>
+                <if condition="$list.shipping_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('User/express',array('order_id'=>$list['order_id']))}">查看物流</a></if>
+          </div>
+	 </div>
+</volist>

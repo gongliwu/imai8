@@ -1,0 +1,30 @@
+.title{color: #fff; background-color: #009B62; text-align: center; line-height: 50px; font-size:1.2em;}
+
+.title-back{
+    content: " ";
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+    border-width: 0 0 2px 2px;
+    border-color: #fefefe;
+    border-style: solid;
+    -webkit-transform: matrix(1.2, 1.2, -1.2, 1.2, 0, 0);
+    transform: matrix(1.2, 1.2, -1.2, 1.2, 0, 0);
+    position: relative;
+    top: 24px;
+    position: absolute;
+    margin-top: -4px;
+    left: 20px;
+    text-decoration: none;
+}
+
+.step{line-height: 50px; text-align: center; font-size:1em; background-color: #fefefe;}
+.setup-current{border-bottom: 1px solid #009B62; color: #009B62;font-weight: 1;}
+
+/* 按钮 */
+.weui-btn_primary{background-color: #009B62; color: #fefefe;}
+
+
+
+
+

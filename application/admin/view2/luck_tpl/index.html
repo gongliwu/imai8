@@ -1,0 +1,170 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+  <div id="append_parent"></div>
+  <div id="ajaxwaitid"></div>
+  <div class="page">
+    <div class="fixed-bar">
+      <div class="item-title">
+        <div class="subject">
+          <h3>抽奖设置列表</h3>
+          <h5>抽奖设置管理</h5>
+        </div>
+      </div>
+    </div>
+    <div id="explanation" class="explanation" style=" width: 99%; height: 100%;">
+      <div id="checkZoom" class="title"><i class="fa fa-lightbulb-o"></i>
+        <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+        <span title="收起提示" id="explanationZoom" style="display: block;"></span>
+      </div>
+       <ul>
+        <li>可以在此添加抽奖设置</li>
+      </ul>
+    </div>
+    <div class="flexigrid">
+      <div class="mDiv">
+        <div class="ftitle">
+          <h3>抽奖设置列表</h3>
+          <h5>(共{$pager->totalRows}条记录)</h5>
+        </div>
+        <div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
+        <form id="search-form2" class="navbar-form form-inline"  method="post" action="{:U('/Admin/LuckTpl/index')}">
+          <div class="sDiv">
+            <div class="sDiv2">
+              <input type="text" class="qsbox" id="input-order-id" placeholder="搜索词" value="{$_POST['keyword']}" name="keyword">
+              <input type="submit" class="btn" value="搜索">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="hDiv">
+        <div class="hDivBox">
+          <table cellspacing="0" cellpadding="0" >
+            <thead>
+              <tr>
+
+                <th align="left" abbr="goods_name"  class="">
+                  <div style="text-align: left; width: 200px;" class="">商品名称</div>
+                </th>
+                <th align="left" abbr="original_img"  class="">
+                  <div style="text-align: center; width: 200px;" class="">商品图片</div>
+                </th>
+
+                <th align="left" abbr="pay_integral"  class="">
+                  <div style="text-align: left; width: 100px;" class="">每次消耗积分</div>
+                </th>
+                <th align="left" abbr="total_times"  class="">
+                  <div style="text-align: left; width: 100px;" class="">总需人次</div>
+                </th>
+
+                <th align="left" abbr="periods"  class="">
+                  <div style="text-align: left; width: 50px;" class="">总期数</div>
+                </th>
+                <th align="left" abbr="is_auto_open"  class="">
+                  <div style="text-align: left; width: 50px;" class="">开奖模式</div>
+                </th>
+                <th align="center" abbr="add_time" class="">
+                  <div style="text-align: left; width: 150px;" class="">创建时间</div>
+                </th>
+                <th align="left" abbr="" axis="col3" class="">
+                  <div style="text-align: left; width: 60px;" class="">操作</div>
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+      <div class="tDiv">
+        <div class="tDiv2">
+          <div class="fbutton"> <a href="{:U('Admin/LuckTpl/add')}">
+            <div class="add" title="新增抽奖设置">
+              <span><i class="fa fa-plus"></i>新增抽奖设置</span>
+            </div>
+            </a>
+            </div>
+        </div>
+        <div style="clear:both"></div>
+      </div>
+
+      <div class="bDiv" style="height: auto;">
+        <div id="flexigrid" cellpadding="0" cellspacing="0" border="0">
+          <table>
+            <tbody>
+              <volist name="list" id="vo">
+                <tr>
+
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 200px;">{$vo.goods_name}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: center; width: 200px;">
+                      <img src="{$vo.goods_id|goods_thum_images=40,40}">
+                    </div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 100px;">{$vo.pay_integral}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 100px;">{$vo.total_times}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 50px;">{$vo.periods}</div>
+                  </td>
+                  <td align="left" class="">
+                    <div style="text-align: left; width: 50px;">
+                      <if condition="$vo[is_auto_open] eq 0">
+                        自动开奖
+                      <else>
+                        手动开奖
+                      </if>
+                    </div>
+                  </td>
+                  <td align="center" class="">
+                    <div style="text-align: center; width: 150px;">{:date('Y-m-d H:i:s',$vo.add_time)}</div>
+                  </td>
+
+                  <td align="center" class="handle">
+                    <div style="text-align: left; width: 60px;">
+                      <a href="{:U('LuckTpl/edit',array('tpl_id' => $vo.tpl_id))}" class="btn blue">
+                        修改
+                      </a>
+                      <!-- <a class="btn red" onclick="delfunc(this)" data-url="{:U('LuckTpl/del')}" data-id="{$vo.tpl_id}"><i class="fa fa-trash-o"></i>删除</a> -->
+
+                    </div>
+                  </td>
+                </tr>
+              </volist>
+            </tbody>
+          </table>
+  	 <!--分页位置-->
+      {$pager->show()} </div>
+    </div>
+  </div>
+</body>
+<script>
+function delfunc(obj){
+  layer.confirm('确认删除？', {
+            btn: ['确定','取消'] //按钮
+          }, function(){
+            // 确定
+            $.ajax({
+              type : 'post',
+              url : $(obj).attr('data-url'),
+              data : {act:'del',del_id:$(obj).attr('data-id')},
+              dataType : 'json',
+              success : function(data){
+                if(data.status==1){
+                  layer.msg('操作成功', {icon: 1});
+                  window.location.reload();
+                }else{
+                  layer.msg(data.msg, {icon: 2,time: 2000});
+                }
+//   						layer.closeAll();
+              }
+            })
+          }, function(index){
+            layer.close(index);
+            return false;// 取消
+          }
+  );
+}
+</script>

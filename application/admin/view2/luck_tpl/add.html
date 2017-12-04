@@ -1,0 +1,198 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title"><a class="back" href="javascript:history.back();" title="返回列表"><i class="fa fa-arrow-circle-o-left"></i></a>
+      <div class="subject">
+        <h3>添加抽奖模板</h3>
+        <h5>抽奖模本添加与管理</h5>
+      </div>
+    </div>
+  </div>
+    <form method="post" id="addForm" >
+      <div class="ncap-form-default">
+        <dl class="row">
+          <dt class="tit">
+            <label for="goods_id"><em>*</em>商品id:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="商品id" class="input-txt" name="goods_id" value="" id="goods_id">
+            <a href="javascript:void(0);" onclick="search_goods();" class="ncap-btn ncap-btn-green" >
+              <i class="fa fa-search"></i>搜索
+            </a>
+            <span class="err" id="err_name" style="color:#F00; display:none;text-align:center"></span>
+          </dd>
+        </dl>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="goods_name">商品名称:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="商品名称" class="input-txt"
+            name="goods_name" value="" readonly="readonly">
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="original_img">商品图片:</label>
+          </dt>
+          <dd class="opt">
+            <img src="" width="200px" height="200px" alt="" name="original_img"/>
+            <input type="hidden" name="img_path" value="">
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="exchange_integral">兑换积分:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="兑换积分" class="input-txt" name="exchange_integral" value="" readonly="readonly">
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="pay_integral"><em>*</em>每次消耗积分:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="每次消耗积分" class="input-txt" name="pay_integral" value="" class="num">
+            <p class="notic"></p>
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="total_times"><em>*</em>总需人次:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="总需人次" class="input-txt" name="total_times" value="" class="num">
+            <p class="notic"></p>
+          </dd>
+        </dl>
+
+        <dl class="row">
+          <dt class="tit">
+            <label for="total_times"><em>*</em>开始期数:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="开始期数" class="input-txt" name="start_period" value="1" class="num">
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="total_times"><em>*</em>总期数:</label>
+          </dt>
+          <dd class="opt">
+            <input type="text" placeholder="总期数" class="input-txt" name="periods" value="" class="num">
+          </dd>
+        </dl>
+        <dl class="row">
+          <dt class="tit">
+            <label for="is_auto_open"><em>*</em>开奖模式:</label>
+          </dt>
+          <dd class="opt">
+            <select name="is_auto_open">
+              <option value="0" selected="selected">自动开奖</option>
+              <option value="1">手动开奖</option>
+            </select>
+          </dd>
+        </dl>
+
+        <div class="bot"><a href="JavaScript:void(0);" onClick="$('#addForm').submit();" class="ncap-btn-big ncap-btn-green" id="submitBtn">确认提交</a></div>
+      </div>
+    </form>
+</div>
+<script>
+
+$(function () {
+  $("#addForm").validate({
+    debug: false, //调试模式取消submit的默认提交功能
+    focusInvalid: false, //当为false时，验证无效时，没有焦点响应
+      onkeyup: false,
+      submitHandler: function(form){   //表单提交句柄,为一回调函数，带一个参数：form
+         form.submit();   //提交表单
+      },
+      ignore:":button",	//不验证的元素
+      rules:{
+        goods_id:{
+          required:true
+        },
+        goods_name:{
+          required:true
+        },
+        original_img:{
+          required:true
+        },
+        exchange_integral:{
+          required:true
+        },
+        pay_integral:{
+          required:true
+        },
+        total_times:{
+          required:true
+        },
+        start_period:{
+          required:true
+        },
+        periods:{
+          required:true
+        },
+      },
+      messages:{
+        goods_id:{
+          required:"商品id"
+        },
+        goods_name:{
+          required:"商品名称"
+        },
+        original_img:{
+          required:"商品图片"
+        },
+        exchange_integral:{
+          required:"兑换积分"
+        },
+        pay_integral:{
+          required:"每次消耗积分"
+        },
+        total_times:{
+          required:"总需人次"
+        },
+        start_period:{
+          required:"开始期数"
+        },
+        periods:{
+          required:"总期数"
+        },
+      }
+  });
+});
+//搜索用户
+function search_goods(){
+  var goods_id = $('#goods_id').val();
+  if($.trim(goods_id) == '')
+    return false;
+
+    $.ajax({
+        type : "POST",
+        url:"/index.php?m=Admin&c=LuckTpl&a=ajaxSearchGoods",
+        data :{goods_id:$('#goods_id').val()},
+        success: function(data){
+          if(data.status < 1){
+            $("#err_name").html(data.msg);
+            $("#err_name").show();
+            return;
+          }
+          $("#err_name").hide();
+          var goods = data.goods;
+          $('input[name="goods_name"]').val(goods.goods_name);
+          $('input[name="exchange_integral"]').val(goods.exchange_integral);
+          $('img[name="original_img"]').attr("src",goods.original_img);
+          $('input[name="img_path"]').val(goods.original_img);
+        }
+    });
+}
+
+
+</script>
+</body>
+</html>

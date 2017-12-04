@@ -1,0 +1,87 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="tpshop" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>购物流程-{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" href="__STATIC__/css/public.css?v=20170830">
+<link rel="stylesheet" href="__STATIC__/css/flow.css">
+<link rel="stylesheet" href="__STATIC__/css/style_jm.css">
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<script src="__STATIC__/js/common.js?v=20170830"></script>
+</head>
+<body style="background: rgb(235, 236, 237);position:relative;">
+
+<div class="tab_nav">
+    <div class="header">
+      <div class="h-left">
+        <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+      </div>
+      <div class="h-mid">购物车   </div>
+    </div>
+</div>
+<div class="screen-wrap fullscreen login">
+    <div class="page-shopping ">
+      <form id="buy_form" name="formBuy" action="{:U('Mobile/CertificateCode/ajaxBuyList')}" method="post">
+          {:token()}
+          <input type='hidden' name='goods_id' value='{$goods_id}'/>
+          <input type='hidden' name='goods_num' value='{$goods_num}'/>
+          <input type="hidden" name="spec_key_name" value="{$spec_key_name}"/>
+          <input type="hidden" name="spec_key" value="{$spec_key}"/>
+          <div id="ajax_return"></div>
+      </form>
+    </div>
+<div style="height:72px;"></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    ajax_buy_list();
+});
+
+// ajax 提交购物车
+var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+function ajax_buy_list(){
+
+	if(before_request == 0) // 上一次请求没回来 不进行下一次请求
+	    return false;
+	before_request = 0;
+    $.ajax({
+        type : "POST",
+        url:"{:U('Mobile/CertificateCode/ajaxBuyList')}",//+tab,
+        data : $('#buy_form').serialize(),// 你的formid
+        success: function(data){
+          $("#ajax_return").html('');
+          $("#ajax_return").append(data);
+			before_request = 1;
+        }
+    });
+}
+
+/**
+ * 购买商品数量加加减减
+ * 购买数量 , 购物车id , 库存数量
+ */
+function switch_num(num,store_count){
+    var num2 = parseInt($("input[name='new_goods_num']").val());
+    num2 += num;
+    if(num2 < 1) num2 = 1; // 保证购买数量不能少于 1
+    if(num2 > store_count)
+    {   alert("库存只有 "+store_count+" 件, 你只能买 "+store_count+" 件");
+        num2 = store_count; // 保证购买数量不能多余库存数量
+    }
+
+    $("input[name='new_goods_num']").val(num2);
+
+    ajax_buy_list(); // ajax 更新商品价格 和数量
+}
+
+</script>
+</body>
+</html>

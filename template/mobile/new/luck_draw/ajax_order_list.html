@@ -1,0 +1,35 @@
+<volist name="lists" id="list">
+       <div class="order_list">
+          <h2>
+              <a href="javascript:void(0);">
+                  <img src="__STATIC__/images/dianpu.png"><span>订单号:{$list.order_sn}</span>
+                  <span style="float: right;color: #f23030;">
+					<?php $v = set_btn_order_status($list);?>
+					{$v.order_status_desc}
+				</span>
+              </a>
+          </h2>
+         	<a href="{:U('/Mobile/User/order_detail',array('id'=>$list['order_id']))}">
+	          <volist name="list.goods_list" id="good">
+		          <dl>
+		          <dt><img src="{$good.goods_id|goods_thum_images=200,200}"></dt>
+		          <dd class="name"><strong>{$good.goods_name}</strong>
+		          <dd class="pice"style=" font-size:13px; color:#F23030; width:25%;float: right;">{$good['luck_pay_integral']}积分一次</dd>
+		          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+		          	
+                  	<em>
+                  		x{$good['luck_joined_times']}
+                    </em>
+                  </dd>
+		          </dl>
+	          </volist>
+          	</a>
+          <div class="pic"><span>实付：</span><strong>￥{$list['total_integral']}积分</strong></div>
+          <div class="anniu" style="width:95%;height: auto;">
+                <if condition="$list.receive_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;"href="{:U('Mobile/User/order_confirm',array('id'=>$list['order_id']))}">收货确认</a></if>
+                <if condition="$list.comment_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;"href="{:U('/Mobile/User/comment')}">评价</a></if>
+                <if condition="$list.shipping_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;"href="{:U('User/express',array('order_id'=>$list['order_id']))}">查看物流</a></if>
+               <!-- <if condition="$list.return_btn eq 1"><a href="{:U('Mobile/Article/article',array('article_id'=>'22'))}" target="_blank">联系客服</a></if> -->
+          </div>
+       </div>
+</volist>

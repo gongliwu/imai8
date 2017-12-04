@@ -1,0 +1,253 @@
+<include file="public/header"/>
+<body style="background: #f3f4f5;">
+<header>
+<div class="tab_nav">
+  <div class="header">
+    <div class="h-left"><a class="sb-back"id="back" isformCode="{$if_form_Code}" href="{:U('Mobile/CertificateCode/order_list')}" title="返回"></a></div>
+    <div class="h-mid">订单详情</div>
+    <div class="h-right">
+       <aside class="top_bar">
+         <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+       </aside>
+    </div>
+  </div>
+</div>
+</header>
+<include file="public/menu"/>
+<div id="tbh5v0">
+	 <if condition="($order_info['order_type'] neq 2)">
+		<img width="100%" style="display: block;" src="__STATIC__/images/xin/order_info_top.png"/>
+			<div class="detail_top"style="border-bottom: none;">
+
+				<dl>
+				<dt class="dingdan_3"style="margin-top: 10px;"></dt>
+				<dd>
+					<h3>收货人&nbsp;:&nbsp;{$order_info.consignee}<em>{$order_info.mobile}</em></h3>
+					<div class="adss"style="padding: 10px 0px 0px 0px ;">收货地址&nbsp;:&nbsp;{$region_list[$order_info['province']]['name']},{$region_list[$order_info['city']]['name']},{$region_list[$order_info['district']]['name']},{$order_info.address}</div>
+				</dd>
+				</dl>
+
+		</div>
+		<img width="100%"style="display: block;" src="__STATIC__/images/xin/order_info_bottom.png"/>
+	</if>
+
+ 	 <if condition="($order_info['order_type'] neq 2)">
+ 	 	<if condition="($order_info.shipping_btn eq 1)">
+		 	<div style="margin-top: 10px; height: 80px;">
+		 		<a style="display: block"  href="{:U('User/express',array('order_id'=>$order_info['order_id']))}" class="on_comment">
+				<div class="detail_top"style="border-bottom: none;height: 80px;">
+
+					<dl>
+					<dt class="wait_img"style="margin-top: 20px;background: url(__STATIC__/images/xin/wait.png)no-repeat;height: 25px;"></dt>
+					<dd>
+						<h3 style="height: 30px;line-height: 30px;"onclick="">包裹正在等待收件<em style="height: 80px;background: url(__STATIC__/images/xin/gt.png)no-repeat;height: 25px;width: 25px;margin-top: 20px;"></em></h3>
+						<h3 style="height: 40px;">2017-6-18</h3>
+					</dd>
+					</dl>
+					</a>
+			</div>
+        </if>
+ 	 </if>
+ 	 <?php
+ 	 		$hascode_sn = count($certificate_code_list);
+ 	 		$isFinish = 0;
+ 	 		if($hascode_sn > 0){
+ 	 			$counts = 0;
+ 	 			foreach($certificate_code_list as $key => $val){
+ 	 				if($val['pay_time']!=0){
+ 	 					$counts++;
+ 	 				}
+ 	 			}
+ 	 			if($counts == $hascode_sn){
+ 	 				$isFinish = 1;
+ 	 			}
+ 	 		}
+ 	 	?>
+ 	 <if condition="($order_info['order_type'] eq 2) and ($hascode_sn gt 0)">
+ 	 	<div style="padding: 10px;">
+ 	 		<div style="display: flex;">
+ 	 			<div style=" font-size: 14px;flex: 1;text-align: center;">
+		 			凭证码（可到实体店使用）
+				</div>
+				<div style=" font-size: 14px;flex: 1;text-align: center;border-left: 1px solid #D2D2D2;">
+		 			消费时间
+				</div>
+ 	 		</div>
+ 	 	</div>
+ 	 	<volist name="certificate_code_list" id="list"key="k">
+ 	 		<div style="display: flex;border-top: 1px solid #E0E0E0;">
+ 	 			<div style=" font-size: 14px;flex: 1;background: #FFFFFF;text-align: center;">
+		 			{$list['code_sn']}
+				</div>
+				<div style=" font-size: 14px;flex: 1;text-align: center;background: #FFFFFF;border-left: 1px solid #D2D2D2;">
+		 			<if condition="$list['pay_time'] eq 0">
+	                     未消费
+                		<else>
+                			{:date('Y-m-d H:i:s',$list['pay_time'])}
+                		</if>
+				</div>
+ 	 		</div>
+
+        </volist>
+ 	 </if>
+
+
+	</div>
+	<div class="ord_list1" style="border: none;">
+			<h2>订单号：{$order_info.order_sn}<span style="float: right;color: #f23030;">{$order_info.order_status_desc}</span></h2>
+
+	<!--商品列表-->
+    <volist name="order_info.goods_list" id="good">
+			<div class="order_list order_list_new_bg" >
+		        <a href="{:U('/Mobile/Goods/goodsInfo',array('id'=>$good['goods_id']))}">
+		          <dl >
+		          <dt>
+		          	<img src="{$good.goods_id|goods_thum_images=200,200}">
+
+		          </dt>
+		          <dd class="name" class="pice" style=" width:50%;height: 100%;">
+	                  <strong style="overflow: hidden;display: block;max-height: 80%;text-overflow: ellipsis;margin-top: 5px;">{$good.goods_name}</strong>
+	                  <span style="color: #666;overflow: hidden;display: block;max-height: 20%;text-overflow: ellipsis;margin-top: 15px;">{$good.spec_key_name}</span>
+                   </dd>
+
+		          <dd class="pice" style=" font-size:13px; color:#f23030; width:25%;float: right;">
+                    <?php
+                        		$goods_exchange_integral = $good['spec_exchange_integral'] ? $good['spec_exchange_integral'] : $good['exchange_integral'] ;
+                        		$integral += $goods_exchange_integral * $good['goods_num'];
+                        		$pay_money += $good['member_goods_price'] * $good['goods_num'];
+                        ?>
+                        {$goods_exchange_integral}能量<em></em>
+
+                        ￥{$good['member_goods_price']}<em></em>
+                  </dd>
+		          <dd class="pice" style=" font-size:13px; color:#F60; width:25%;float: right;">
+
+                  	<em>
+                  		x{$good['goods_num']}
+                    </em>
+                  </dd>
+		          </dl>
+		          </a>
+		    </div>
+	</volist>
+	 <!--<div style="border:0;text-align: right;padding: 0px 10px 10px 10px;color: #070707;font-size: 12px;">
+        共<?php echo count($order_info['goods_list']); ?>件商品&nbsp;&nbsp;&nbsp;&nbsp;
+        合计：
+            <span style="font-size: 16px;color:#f23030;">
+                <if condition="($order_info['order_type'] eq 2) and ($hascode_sn gt 0) and ($order_info['integral'] gt 0)">
+                    {$order_info['integral']}能量
+                <else>
+                    ￥{$good['member_goods_price'] * $good['goods_num']}
+                </if>
+            </span>
+    </div>
+		-->
+
+       <div class="display_flex border_bottom_1">
+          	<div class="flex_1 padding_left_10 font_size_14">
+          		共<?php echo count($order_info['goods_list']); ?>件商品&nbsp;&nbsp;&nbsp;&nbsp;
+          	</div>
+          	<div class="font_size_14 padding_right_10">
+          		<if condition="$order_info.pay_btn eq 1">
+          				<p><span id="">能量支付：</span><strong class="color_red font_size_16">{$order_info['integral']}</strong></p>
+          				<p><span id="">现金支付：</span><strong class="color_red font_size_16">￥{$order_info['order_amount']}</strong></p>
+          		<else>
+          			<if condition="($order_info['pay_code'] eq 'integral')">
+          				<p><span id="">实付：</span><strong class="color_red font_size_16">{$order_info['integral']}能量</strong></p>
+          			<else>
+          				<p><span id="">实付：</span><strong class="color_red font_size_16">￥{$order_info['order_amount']}</strong></p>
+          			</if>
+          		</if>
+          	</div>
+          </div>
+    	</div>
+
+
+
+	</div>
+
+</div>
+
+
+		<div style=" height:50px;"></div>
+		<style type="text/css">
+			.on_comment{margin-left: 10px;}
+			.red_btn{border: 1px solid #f23030 !important;color: #f23030 !important; }
+		</style>
+		<div class="detail_dowm" style="background: #FFFFFF;">
+			<div class="anniu1"style="width:95%;height: auto;">
+                <if condition="$order_info.cancel_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" onClick="cancel_order({$order_info.order_id})" class="on_comment">取消订单</a></if>
+                <if condition="$order_info.pay_btn eq 1"><a style="margin-left: 10px;margin-bottom: 10px;" href="javascript:;" onclick="integral_pay({$order_info.order_id})" class="on_comment red_btn">能量支付</a><a style="margin-left: 10px;margin-bottom: 10px;" href="{:U('Mobile/Cart/cart4',array('order_id'=>$order_info['order_id']))}" class="on_comment red_btn">现金支付</a></if>
+                <if condition="($hascode_sn gt 0) and ($isFinish eq 1) and ($good['is_comment'] eq 0)">
+                	<a  style="margin-left: 10px;margin-bottom: 10px;"href="{:U('/Mobile/User/add_comment',array('rec_id'=>$good['rec_id'],'ttype'=>1))}" class="on_comment red_btn">评价</a>
+
+                </if>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+//	$(function(){
+//		var is_f = $("#back").attr("isformCode");
+//		if (is_f == 1) {
+//			$("#back").attr("href","{:U('Mobile/CertificateCode/order_list')}");
+//		}else{
+//			$("#back").attr("href","javascript:history.back(-1)");
+//		}
+//
+//	})
+    //取消订单
+    function cancel_order(id){
+        if(!confirm("确定取消订单?"))
+            return false;
+        location.href = "/index.php?m=Mobile&c=User&a=cancel_order&id="+id;
+    }
+     //能量支付
+function integral_pay(order_id){
+	layer.open({
+		  		type: 1,
+		  		title: false,
+		  		closeBtn:0,
+		  		shadeClose: true,
+		  		content:'<div class="actionsheet"style="width:250px;">'+
+							'<div class="actionsheet_menu"style="width:250px;">'+
+							'<div class="actionsheet_content">是否使用能量支付？</div>'+
+					        '<div class="actionsheet-flex ">'+
+					        		'<div class="actionsheet-flex__item actionsheet_cancel_btn"onclick=" layer.closeAll()">取消</div>'+
+				              '<div class="actionsheet-flex__item actionsheet_confirm_btn" onclick="pay('+ order_id +')">确认</div>'+
+				           ' </div>'+
+							'</div>'+
+						'</div>'
+		 });
+}
+function pay(order_id){
+	layer.closeAll();
+  layer.load(1, {
+  	shade: [0.1,'#fff'] //0.1透明度的白色背景
+	});
+	$.ajax({
+		type:"get",
+		url:"/index.php?m=Mobile&c=CertificateCode&a=integral_pay&order_id="+order_id,
+		async:true,
+		success:function(result){
+      layer.closeAll();
+			var res = JSON.parse(result);
+			if (res.ret == 0) {
+				layer.msg("支付成功",{time:1500});
+				setTimeout(function(){
+					window.location.href = '/Mobile/CertificateCode/order_detail?id='+order_id;
+				},1800)
+
+			} else{
+				layer.msg(res.msg,{time:2000});
+
+			}
+		}
+	});
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop v1.1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{$tpshop_config['shop_info_store_title']}</title>
+<meta http-equiv="keywords" content="{$tpshop_config['shop_info_store_keyword']}" />
+<meta name="description" content="{$tpshop_config['shop_info_store_desc']}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/public.css?v=20170830"/>
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/index.css?v=20170830"/>
+<style type="text/css">
+.pics {
+  height: 40px;
+}
+
+/*为了不跟首页冲突*/
+#J_ItemList{margin-top: 10px;}
+.top_gb{
+	    display: block;
+    float: left;
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 1px;
+    left: 5px;
+}
+
+/*说明*/
+.state_wrap{color: #333;font-size: 11px;}
+.fl{float: left;}
+.fr{float: right;text-align: right;}
+</style>
+<script type="text/javascript" src="__STATIC__/js/jquery.js"></script>
+<script type="text/javascript" src="__STATIC__/js/TouchSlide.1.1.js"></script>
+<script type="text/javascript" src="__STATIC__/js/jquery.json.js"></script>
+<script type="text/javascript" src="__STATIC__/js/touchslider.dev.js"></script>
+<script type="text/javascript" src="__STATIC__/js/layer.js?v=20170919" ></script>
+<script src="__PUBLIC__/js/global.js"></script>
+<script src="__PUBLIC__/js/mobile_common.js?v=20170830"></script>
+<!-- IE8及以下支持JSON -->
+<!--[if lt IE 9]>
+    <script src="https://g.alicdn.com/aliww/ww/json/json.js" charset="utf-8"></script>
+<![endif]-->
+<!-- WSDK-->
+<script src="https://g.alicdn.com/aliww/h5.openim.sdk/1.0.6/scripts/wsdk.js"></script>
+</head>
+<body style="background: rgba(238,238,238,0.9);">
+<div id="page" class="showpage">
+<div>
+<header id="header">
+	<div class="h-left top_gb">
+	      <a class="sb-back w" href="javascript:history.back(-1)" title="返回"></a>
+	</div>
+	<span href="javascript:void(0)" class="logo">用户参与记录</span>
+</header>
+<input type="hidden" name="" id="luckid" value="{$luck_id}" />
+<script type="text/javascript">
+	TouchSlide({
+		slideCell:"#index_banner",
+		titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+		mainCell:".bd ul",
+		effect:"leftLoop",
+		autoPage:true,//自动分页
+		autoPlay:true //自动播放
+	});
+</script>
+
+<script type="text/javascript">
+var geturl = "/index.php?m=Mobile&c=Luck_draw&a=ajax_history&luck_id="+$("#luckid").val()+"&p=";
+$(function(){
+	getGoodsList();
+});
+
+var page = 1;
+function getGoodsList(){
+	$('.get_more').show();
+	$.ajax({
+		type : "post",
+		url:"/index.php?m=Mobile&c=LuckDraw&a=ajax_join_records&luck_id={$luck_id}&p="+page,
+		success: function(data)
+		{
+			if($.trim(data)!=''){
+				$("#J_ItemList>ul").append(data);
+				page++;
+				$('.get_more').hide();
+			}else{
+				$('.get_more').hide();
+				$('#getmore').remove();
+			}
+		}
+	});
+}
+</script>
+<div  >
+
+  <div id="J_ItemList">
+    <ul >
+    </ul>
+    <a href="javascript:;" class="get_more" style="text-align:center; display:block;">
+    <img src='__STATIC__/images/category/loader.gif' width="12" height="12"> </a>
+  </div>
+  <div id="getmore" style="font-size:.24rem;text-align: center;color:#888;padding:.25rem .24rem .4rem;">
+  	<a href="javascript:void(0)" onClick="getGoodsList()">点击加载更多</a>
+  </div>
+</div>
+
+<script>
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600);
+}
+</script>
+<a href="javascript:goTop();" class="gotop"><img src="__STATIC__/images/topup.png"></a>
+</div>
+
+     </div>
+
+</div>
+<include file="public/footer_nav"/>
+
+<!--<script src="__PUBLIC__/js/jqueryUrlGet.js"></script>--><!--获取get参数插件-->
+</body>
+</html>

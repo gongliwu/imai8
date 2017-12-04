@@ -1,0 +1,49 @@
+<foreach name="consultList" item="v" key="k">
+ 	<li class="background_white padding_10_10 display_flex margin_bottom_10">
+        	<?php
+				$username = substr_cut($v['username']);
+				$times = get_social_time($v['add_time']);
+			?>
+        <div style="width: 50px;">
+        		<img src="{$v[avatar]|default='__STATIC__/images/user68.jpg'}"style="border-radius: 50%;" width="50"height="50"/>
+        </div>
+        <div class="flex_1 padding_left_10">
+        		<div class="display_flex padding_10_0">
+        			<div class="flex_1 font_size_16">
+        				{$username}
+        			</div>
+        			<div class="flex_1 text_right color_9 font_size_12">
+        				{$times}
+        			</div>
+        		</div>
+	        <div class="display_flex padding_10_0 font_size_14" >
+	        		<div class="question_icon">
+	        			问
+	        		</div>
+	        		<div class="flex_1 padding_left_10"style="line-height: 15px;word-wrap:break-word;">
+	        			{$v.content}
+	        		</div>
+	        </div>
+	       <foreach name="replyList" item="v3" >
+		   	<if condition="$v3['parent_id']  eq $v['id']">
+	        		<div class="display_flex padding_10_0 font_size_14" style="line-height: 15px;">
+
+	        			<div class="answer_icon">
+	        				答
+	        			</div>
+					<div class="flex_1 padding_left_10" >
+
+		                 <div class="wy3"style="line-height: 15px;word-wrap:break-word;">
+		                     <!--<span>回复：</span>-->
+		                     <span class="color_9">{$v3['content']}</span>
+		                     <!--<em>{$v3['add_time']|date="Y-m-d",###}</em>-->
+		                 </div>
+	        			</div>
+
+	        		</div>
+	        </if>
+		  </foreach>
+         </div>
+   </li>
+
+</foreach>
