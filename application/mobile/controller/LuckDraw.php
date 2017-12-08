@@ -112,7 +112,7 @@ class LuckDraw extends MobileBase {
     $trans->startTrans();   // 开启事务
     $tran_result = true;
     try {   // 异常处理
-      $order_goods = $this->addOrder($luck_draw,$luck_tpl,$user,$joined_times);
+      $order_goods = $this->addOrder($luck_draw,$luck_tpl,$user,$joined_times);//生成订单
       foreach ($luck_sn_list as $key => $value) {
         $data = array(
            'luck_id' => $luck_id,
@@ -132,7 +132,7 @@ class LuckDraw extends MobileBase {
       $tran_result = false;
     }
 
-    if (!$tran_result) {
+    if (!$tran_result || (!$order_goods['rec_id']) || (!$order_goods['order_id'])) {
         $trans->rollback();
         // 更新失败
         return array('status'=> -500,'msg'=>"抽奖失败！");
