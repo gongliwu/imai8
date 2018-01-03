@@ -460,7 +460,7 @@ function juhecurl($url,$params=false,$ispost=0){
         return false;
     }
 
-    }
+    
     $response = curl_exec( $ch );
     if ($response === FALSE) {
         //echo "cURL Error: " . curl_error($ch);
