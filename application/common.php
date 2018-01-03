@@ -1,4 +1,4 @@
-<?php
+  <?php
 /**
  * tpshop
  * ============================================================================
@@ -452,6 +452,14 @@ function juhecurl($url,$params=false,$ispost=0){
         }else{
             curl_setopt( $ch , CURLOPT_URL , $url);
         }
+
+    }
+    $response = curl_exec( $ch );
+    if ($response === FALSE) {
+        //echo "cURL Error: " . curl_error($ch);
+        return false;
+    }
+
     }
     $response = curl_exec( $ch );
     if ($response === FALSE) {
@@ -674,26 +682,21 @@ function tpCache($config_key,$data = array()){
  * @param   float   distribut_money 分佣金额
  * @return  bool
  */
-function accountLog($user_id, $user_money = 0,$pay_points = 0, $desc = '',$distribut_money = 0,$isAdd = 1){
+function accountLog($user_id, $user_money = 0,$pay_points = 0, $desc = '',$distribut_money = 0){
     /* 插入帐户变动记录 */
     $account_log = array(
         'user_id'       => $user_id,
         'user_money'    => $user_money,
-        'pay_points'    => $isAdd ? $pay_points : -$pay_points,
+        'pay_points'    => $pay_points,
         'change_time'   => time(),
         'desc'   => $desc,
     );
     /* 更新用户信息 */
 //    $sql = "UPDATE __PREFIX__users SET user_money = user_money + $user_money," .
 //        " pay_points = pay_points + $pay_points, distribut_money = distribut_money + $distribut_money WHERE user_id = $user_id";
-  $exp_points = 'pay_points+';
-  if(!$isAdd){
-    $exp_points = 'pay_points-';
-  }
-
     $update_data = array(
         'user_money'        => ['exp','user_money+'.$user_money],
-        'pay_points'        => ['exp',$exp_points.$pay_points],
+        'pay_points'        => ['exp','pay_points+'.$pay_points],
         'distribut_money'   => ['exp','distribut_money+'.$distribut_money],
     );
 	if(($user_money+$pay_points+$distribut_money) == 0)
@@ -809,7 +812,7 @@ function orderStatusDesc($order_id = 0, $order = array())
         if($order['order_status'] == 2)
             return 'WAITCCOMMENT'; //'待评价',
     }
-
+    
     if($order['order_status'] == 3)
         return 'CANCEL'; //'已取消',
 
@@ -1455,7 +1458,7 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
       $total_amount = 0;
     }
 
-
+    
 
     $result = array(
         'total_amount' => $total_amount, // 商品总价
